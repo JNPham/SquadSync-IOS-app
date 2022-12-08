@@ -6,7 +6,7 @@ import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
-import { getDatabase, ref, set, update, onValue, remove } from "firebase/database";
+import { getDatabase, child, ref, set, get, update, onValue, remove } from "firebase/database";
 import { useState } from 'react';
 
 // Your web app's Firebase configuration
@@ -60,8 +60,25 @@ export default function App() {
       placeholder='Username' style={styles.TextBoxes}></TextInput>
       <TextInput value={email} onChangeText={(email) => {setEmail(email)}} placeholder='Email' style={styles.TextBoxes}></TextInput>
       <Button title='create data' onPress={createData}></Button>
+      <Button title='get data' onPress={getData}></Button>
     </View>
+    
+    
   );
+  function getData() {
+    const dbRef = ref(getDatabase());
+    get(child(dbRef, `users/${username}`)).then((snapshot) => {
+    if (snapshot.exists()) {
+      var data = snapshot.val()
+      console.log(data);
+      alert('data: ' + JSON.stringify(data))
+    } else {
+      console.log("No data available");
+    }
+    }).catch((error) => {
+      console.error(error);   
+    });  
+}
 
 }
 
