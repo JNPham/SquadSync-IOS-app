@@ -1,12 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
-import { Button, StyleSheet, Text, View, Pressable } from 'react-native';
+import { Button, StyleSheet, Text, View, button, Pressable, TextInput } from 'react-native';
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, ref, set, update, onValue, remove } from "firebase/database";
+import { useState } from 'react';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -21,27 +22,49 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
-const database = getDatabase();
+const db = getDatabase();
 
 export default function App() {
+
+
+  const [username, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [lastUserName, setLastUserName] = useState('');
+
+  function createData() {
+
+    set(ref(db, 'users/' + username), {          
+      username: username,
+      email: email  
+    }).then(() => {
+      // Data saved successfully!
+      alert('data created!');    
+  })  
+      .catch((error) => {
+          // The write failed...
+          alert(error);
+      });
+}
+
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <Pressable style={styles.button} onPress={logic()}>
-          <Text style={styles.buttonText}>Send to Database</Text>
-        </Pressable>
-      
-      <StatusBar style="auto" />
+
+  <View style={styles.container}>
+      <Text>firebase</Text>
+      <TextInput value={username} 
+      onChangeText={(username) => {
+          setName(username)
+          setLastUserName(username) // add this line
+        }
+      } 
+      placeholder='Username' style={styles.TextBoxes}></TextInput>
+      <TextInput value={email} onChangeText={(email) => {setEmail(email)}} placeholder='Email' style={styles.TextBoxes}></TextInput>
+      <Button title='create data' onPress={createData}></Button>
     </View>
   );
+
 }
-function logic() {
-  //database.ref('names').set({'12345':'caleb'})
-  const db = getDatabase();
-  set(ref(db, 'names/'), {
-    '1234': 'Caleb Lee'
-    });
-}
+
 
 const styles = StyleSheet.create({
   container: {
@@ -50,4 +73,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  button:{
+    marginTop: 10,
+    marginBottom: 10,
+    height: 47,
+    borderRadius:5,
+    backgroundColor: '#788ecc',
+    width:200,
+    alignItems:'center',
+    justifyContent:'center',
+ },
+ buttonText:{
+    color:'white',
+    fontSize:15,
+ },
+ TextBoxes: {
+  width:'90%',
+  fontSize:18,
+  padding:12,
+  backgroundColor:'grey',
+  marginVertical:10,
+}
+
 });
