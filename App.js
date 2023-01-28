@@ -5,7 +5,7 @@ import { Button, StyleSheet, Text, View, button, Pressable, TextInput } from 're
 import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
-import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, User } from 'firebase/auth';
 import { getDatabase, child, ref, set, get, update, onValue, remove } from "firebase/database";
 import { useState } from 'react';
 
@@ -29,42 +29,82 @@ export default function App() {
 
   const [username, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [lastUserName, setLastUserName] = useState('');
 
-  function createData() {
-
-    set(ref(db, 'users/' + username), {          
-      username: username,
-      email: email  
-    }).then(() => {
-      // Data saved successfully!
-      alert('data created!');    
-  })  
-      .catch((error) => {
-          // The write failed...
-          alert(error);
-      });
-}
+  
 
 
   return (
 
   <View style={styles.container}>
-      <Text>firebase</Text>
-      <TextInput value={username} 
-      onChangeText={(username) => {
-          setName(username)
+      <Text>SquadSync</Text>
+       
+      <TextInput value={username} onChangeText={(username) => { // USERNAME
+          setName(username) 
           setLastUserName(username) // add this line
         }
       } 
       placeholder='Username' style={styles.TextBoxes}></TextInput>
-      <TextInput value={email} onChangeText={(email) => {setEmail(email)}} placeholder='Email' style={styles.TextBoxes}></TextInput>
-      <Button title='create data' onPress={createData}></Button>
-      <Button title='get data' onPress={getData}></Button>
+
+      <TextInput value={email} onChangeText={(email) => { // EMAIL
+        setEmail(email)
+        }
+      } placeholder='Email' style={styles.TextBoxes}></TextInput>
+
+    <TextInput value={password} onChangeText={(password) => { // PASSWORD
+          setPassword(password)
+        }
+      } 
+      placeholder='Password' style={styles.TextBoxes}></TextInput>
+      
+      <Button title='Create Account' onPress={createAccount}></Button> 
+
+      
     </View>
-    
-    
   );
+
+  function createAccount() {
+    const auth = getAuth();
+    // TODO check email contains @ and is valid email
+    if (username.trim() != "" && email.trim() != "" && password.trim() != ""){
+      createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        const userId = user.uid
+        // Make sure we store our user in our database
+        storeUser(userId)
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
+    } else {
+      alert('Unable to create user, check the username, email and password fields!');    
+    }
+  }
+
+  function storeUser(userId) {
+    // Store the user ID and basic info
+    set(ref(db, 'users/' + userId), {          
+      email: email,
+      username: username,
+      nickname: username
+    })
+    // Store into our just created user ID our group structure (dummy data)
+    set(ref(db, 'users/' + userId + '/groups/'), {          
+      defaultGroup: "defaultGroupName"
+    })
+    // Store into our just created user ID user profile structure (empty string for now)
+    set(ref(db, 'users/' + userId + '/profile/'), {          
+      profilePicUrl: ""
+    })
+    alert('User Created! Userid: ' + userId)
+  }
+
+
+
   function getData() {
     const dbRef = ref(getDatabase());
     get(child(dbRef, `users/${username}`)).then((snapshot) => {
