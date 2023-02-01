@@ -4,10 +4,10 @@ import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, User } fro
 import { getDatabase, child, ref, set, get, update, onValue, remove } from "firebase/database";import { useState } from 'react';
 
 export default function SignUp({ navigation }) {
-    const [username, setName] = useState('');
+    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [lastUserName, setLastUserName] = useState('');
+    const [name, setName] = useState('');
     
     const auth = getAuth();
     const db = getDatabase();
@@ -44,7 +44,7 @@ export default function SignUp({ navigation }) {
         set(ref(db, 'users/' + userId), {          
           email: email,
           username: username,
-          nickname: username
+          fullname: name
         })
         // Store into our just created user ID our group structure (dummy data)
         set(ref(db, 'users/' + userId + '/groups/'), {          
@@ -99,30 +99,16 @@ export default function SignUp({ navigation }) {
 
             <Text style={[styles.text, {top:'40%'}]}>Or simply fill out the information below</Text>
 
-            <TextInput value={username} onChangeText={(username) => { // FULLNAME --> todo: change code to Full Name
-                setName(username) 
-                setLastUserName(username) 
-                }
-            } 
+            <TextInput value={name} onChangeText={(name) => { setName(name) }} 
             placeholder='Enter Full Name' style={[styles.TextBoxes, {top:'45%'}]}></TextInput>
 
-            <TextInput value={email} onChangeText={(email) => { // EMAIL
-                setEmail(email)
-                }
-            } 
+            <TextInput value={email} onChangeText={(email) => { setEmail(email)}} 
             placeholder='Enter Email' style={[styles.TextBoxes, {top: '53%'}]}></TextInput>
 
-            <TextInput value={username} onChangeText={(username) => { // USERNAME 
-                setName(username) 
-                setLastUserName(username) // add this line
-                }
-            } 
+            <TextInput value={username} onChangeText={(username) => { setUsername(username)}} 
             placeholder='Enter Username' style={[styles.TextBoxes, {top: '61%'}]}></TextInput>
 
-            <TextInput value={password} onChangeText={(password) => { // PASSWORD
-                setPassword(password)
-                }
-            } 
+            <TextInput value={password} onChangeText={(password) => { setPassword(password)}} 
             placeholder='Enter Password' style={[styles.TextBoxes, {top: '69%'}]}></TextInput>
 
             <Text style={[styles.text, {top:'80%'}]}>By signing up, you agree to our Terms and Conditions.</Text>
@@ -196,3 +182,4 @@ const styles = StyleSheet.create({
     borderRadius: 35,
   },
 });
+
