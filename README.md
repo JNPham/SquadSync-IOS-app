@@ -1,1 +1,0 @@
-# SquadSync-IOS-app
