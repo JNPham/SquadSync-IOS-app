@@ -3,24 +3,12 @@ import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { getDatabase, ref, set, onValue, push, update, remove } from "firebase/database";
 
-export default function Home() {
+export default function Setting() {
     return (
         <View style={styles.container}>
-            <Text>Welcome to SquadSync!</Text>
-            <Pressable style={styles.button} onPress={logic()}>
-                <Text style={styles.buttonText}>Send to Database</Text>
-            </Pressable>
-            <StatusBar style="auto" />
+            <Text>Welcome to SquadSync Setting</Text>
         </View>
     );
-}
-
-function logic() {
-    //database.ref('names').set({'12345':'caleb'})
-    const db = getDatabase();
-    update(ref(db, 'devs/'), {
-      '112233': 'Nhi Pham'
-    });
 }
 
 const styles = StyleSheet.create({

@@ -33,7 +33,7 @@ export default function SignUp({ navigation }) {
             const errorCode = error.code;
             const errorMessage = error.message;
           })
-          navigation.navigate('Home'); // Navigate to the Home page after signing up
+          navigation.navigate('TabNavigation', {screen: 'Home'}); // Navigate to the Home page after signing up
         } else {
           alert('Unable to create user, check the username, email and password fields!');    
         }
