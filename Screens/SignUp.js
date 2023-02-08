@@ -33,7 +33,7 @@ export default function SignUp({ navigation }) {
             const errorCode = error.code;
             const errorMessage = error.message;
           })
-          navigation.navigate('TabNavigation', {screen: 'Home'}); // Navigate to the Home page after signing up
+          
         } else {
           alert('Unable to create user, check the username, email and password fields!');    
         }
@@ -54,6 +54,7 @@ export default function SignUp({ navigation }) {
         set(ref(db, 'users/' + userId + '/profile/'), {          
           profilePicUrl: ""
         })
+        navigation.navigate('TabNavigation', {screen: 'Home'}); // Navigate to the Home page after signing up
         alert('User Created! Userid: ' + userId)
     }
     
