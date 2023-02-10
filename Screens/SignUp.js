@@ -1,5 +1,5 @@
-import { StatusBar } from 'expo-status-bar';
-import { Button, StyleSheet, Text, View, button, Pressable, TextInput, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Pressable, TextInput, Image, TouchableOpacity } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getDatabase, child, ref, set, get} from "firebase/database";
 import { useState } from 'react';
@@ -55,26 +55,6 @@ export default function SignUp({ navigation }) {
         } 
     }
     
-    function storeUser(userId) {
-        // Store the user ID and basic info
-        set(ref(db, 'users/' + userId), {          
-          email: email,
-          username: username,
-          fullname: fullname,
-          password: password,
-        })
-        // Store into our just created user ID our group structure (dummy data)
-        set(ref(db, 'users/' + userId + '/groups/'), {          
-          defaultGroup: "defaultGroupName"
-        })
-        // Store into our just created user ID user profile structure (empty string for now)
-        set(ref(db, 'users/' + userId + '/profile/'), {          
-          profilePicUrl: ""
-        })
-        alert('User Created! Userid: ' + userId)
-        navigation.navigate('TabNavigation', {screen: 'Home'}); // Navigate to the Home page after signing up
-    }
-    
     // todo: Sign up with Google Account
     function googleAcct() {
         //code here
@@ -100,10 +80,11 @@ export default function SignUp({ navigation }) {
     }
 
     return (
+      <KeyboardAwareScrollView contentContainerStyle={styles.container}>
         <View style={styles.container}>
             <Image source={LogoImage} style={styles.logo} />
-            <Image source={ConsoleImage} style={{position: 'absolute', width: 170, height: 130, left:'-10%', top:'-2%'}} />
-            <Image source={RankImage} style={{position: 'absolute', width: 210, height: 190, right: '0%', bottom:'0%'}} />
+            <Image source={ConsoleImage} style={{position: 'absolute', width: 170, height: 130, left:'-60%', top:'-2%'}} />
+            <Image source={RankImage} style={{position: 'absolute', width: 210, height: 190, right: '-50%', bottom:'0%'}} />
 
             <Text style={[styles.text, {top:'26%'}]}>Register using a third party account</Text>
             
@@ -155,6 +136,7 @@ export default function SignUp({ navigation }) {
                             letterSpacing: 0.05,}}>Sign Up</Text>
             </Pressable> 
         </View>
+      </KeyboardAwareScrollView>
     );
 }
 
@@ -176,14 +158,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: 47,
     height: 47,
-    left: 120,
+    left: '-20%',
     top: '31%',
   },
   apple: {
     position: 'absolute',
     width: 47,
     height: 47.89,
-    left: 216,
+    left: '10%',
     top: '31%',
   },
   text: {
