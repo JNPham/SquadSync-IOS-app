@@ -1,15 +1,16 @@
 import { StatusBar } from 'expo-status-bar';
 import { Button, StyleSheet, Text, View, button, Pressable, TextInput, Image, TouchableOpacity } from 'react-native';
-import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, User } from 'firebase/auth';
-import { getDatabase, child, ref, set, get, update, onValue, remove } from "firebase/database";import { useState } from 'react';
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getDatabase, child, ref, set, get} from "firebase/database";
+import { useState } from 'react';
 
 export default function SignUp({ navigation }) {
     const [username, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [lastUserName, setLastUserName] = useState('');
+    const [fullname, setFullName] = useState('');
     
-    const auth = getAuth();
+    //const auth = getAuth();
     const db = getDatabase();
     const LogoImage = require('../assets/squadsync.png');
     const GoogleImage = require('../assets/google.png');
@@ -18,25 +19,40 @@ export default function SignUp({ navigation }) {
     const RankImage = require('../assets/Decor.png');
     
     function createAccount() {
-        //const auth = getAuth();
         // TODO check email contains @ and is valid email
+        const auth = getAuth();
         if (username.trim() != "" && email.trim() != "" && password.trim() != ""){
           createUserWithEmailAndPassword(auth, email, password)
-          .then((userCredential) => {
-            // Signed in 
+          .then(async (userCredential) => {
+            // Signed in
             const user = userCredential.user;
-            const userId = user.uid
-            // Make sure we store our user in our database
-            storeUser(userId)
+            const userId = user.uid;
+            // Store the user ID and basic info
+            set(ref(db, 'users/' + userId), {          
+              email: email,
+              username: username,
+              fullname: fullname,
+              password: password,
+            })
+            // Store into our just created user ID our group structure (dummy data)
+            set(ref(db, 'users/' + userId + '/groups/'), {          
+              defaultGroup: "defaultGroupName"
+            })
+            // Store into our just created user ID user profile structure (empty string for now)
+            set(ref(db, 'users/' + userId + '/profile/'), {          
+              profilePicUrl: ""
+            })
+            alert('Your account has been successfully created! Userid: ' + userId)
+            // Navigate to the Home page after signing up
+            navigation.navigate('TabNavigation', {screen: 'Home'}); 
           })
           .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
           })
-          
         } else {
           alert('Unable to create user, check the username, email and password fields!');    
-        }
+        } 
     }
     
     function storeUser(userId) {
@@ -44,7 +60,8 @@ export default function SignUp({ navigation }) {
         set(ref(db, 'users/' + userId), {          
           email: email,
           username: username,
-          nickname: username
+          fullname: fullname,
+          password: password,
         })
         // Store into our just created user ID our group structure (dummy data)
         set(ref(db, 'users/' + userId + '/groups/'), {          
@@ -54,8 +71,8 @@ export default function SignUp({ navigation }) {
         set(ref(db, 'users/' + userId + '/profile/'), {          
           profilePicUrl: ""
         })
-        navigation.navigate('TabNavigation', {screen: 'Home'}); // Navigate to the Home page after signing up
         alert('User Created! Userid: ' + userId)
+        navigation.navigate('TabNavigation', {screen: 'Home'}); // Navigate to the Home page after signing up
     }
     
     // todo: Sign up with Google Account
@@ -100,9 +117,8 @@ export default function SignUp({ navigation }) {
 
             <Text style={[styles.text, {top:'40%'}]}>Or simply fill out the information below</Text>
 
-            <TextInput value={username} onChangeText={(username) => { // FULLNAME --> todo: change code to Full Name
-                setName(username) 
-                setLastUserName(username) 
+            <TextInput value={fullname} onChangeText={(fullname) => { // FULLNAME --> todo: change code to Full Name
+                setFullName(fullname)
                 }
             } 
             placeholder='Enter Full Name' style={[styles.TextBoxes, {top:'45%'}]}></TextInput>
@@ -114,8 +130,7 @@ export default function SignUp({ navigation }) {
             placeholder='Enter Email' style={[styles.TextBoxes, {top: '53%'}]}></TextInput>
 
             <TextInput value={username} onChangeText={(username) => { // USERNAME 
-                setName(username) 
-                setLastUserName(username) // add this line
+                setName(username)
                 }
             } 
             placeholder='Enter Username' style={[styles.TextBoxes, {top: '61%'}]}></TextInput>
