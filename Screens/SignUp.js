@@ -1,5 +1,4 @@
-import { StatusBar } from 'expo-status-bar';
-import { Button, StyleSheet, Text, View, button, Pressable, TextInput, Image, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Text, View, Pressable, TextInput, Image, TouchableOpacity } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getDatabase, child, ref, set, get} from "firebase/database";
@@ -54,26 +53,6 @@ export default function SignUp({ navigation }) {
         } else {
           alert('Unable to create user, check the username, email and password fields!');    
         } 
-    }
-    
-    function storeUser(userId) {
-        // Store the user ID and basic info
-        set(ref(db, 'users/' + userId), {          
-          email: email,
-          username: username,
-          fullname: fullname,
-          password: password,
-        })
-        // Store into our just created user ID our group structure (dummy data)
-        set(ref(db, 'users/' + userId + '/groups/'), {          
-          defaultGroup: "defaultGroupName"
-        })
-        // Store into our just created user ID user profile structure (empty string for now)
-        set(ref(db, 'users/' + userId + '/profile/'), {          
-          profilePicUrl: ""
-        })
-        alert('User Created! Userid: ' + userId)
-        navigation.navigate('TabNavigation', {screen: 'Home'}); // Navigate to the Home page after signing up
     }
     
     // todo: Sign up with Google Account
