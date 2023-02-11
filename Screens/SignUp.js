@@ -98,7 +98,7 @@ export default function SignUp({ navigation }) {
 
             <Text style={[styles.text, {top:'40%'}]}>Or simply fill out the information below</Text>
 
-            <TextInput value={fullname} onChangeText={(fullname) => { // FULLNAME --> todo: change code to Full Name
+            <TextInput value={fullname} onChangeText={(fullname) => { // FULLNAME
                 setFullName(fullname)
                 }
             } 

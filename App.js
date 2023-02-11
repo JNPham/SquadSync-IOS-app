@@ -2,11 +2,10 @@ import './config/firebase';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-//import Home from "./Screens/StackScreen/Home";
 import SignUp from "./Screens/SignUp";
 import { TabNavigation } from './Screens/StackScreen/TabNavigation';
+import { GroupNavigation } from './Screens/StackScreen/GroupScreens/GroupNavigation';
 
 const Stack = createStackNavigator();
 
@@ -16,6 +15,7 @@ export default function App() {
       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="SignUp"> 
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="TabNavigation" component={TabNavigation} />
+        <Stack.Screen name="GroupNavigation" component={GroupNavigation} />
       </Stack.Navigator>
     </NavigationContainer>
   )
