@@ -14,7 +14,7 @@ export default function Home({navigation}) {
     let group = [];
     const [userName, setUserName] = useState('');
     const [search, setSearch] = useState('');
-    const [groupList, setGroupList] = useState('');
+    const [groupList, setGroupList] = useState([]);
 
     //todo
     //search and return group that match Group Name
