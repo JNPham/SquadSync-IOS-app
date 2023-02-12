@@ -19,7 +19,7 @@ export default function GroupSetting({navigation}) {
     const [activityLog, setActivityLog] = useState('');
 
     function saveGroupData() {
-        if (groupName.trim() != "" && admin() != "" && memberLimit() != ""){
+        if (groupName.trim() != "" && admin.trim() != "" && memberLimit.trim() != ""){
             alert('Your group has been successfully created!');
         } else {
             alert('Unable to create goup! Please check the group name, admin and member limit fields!');    
