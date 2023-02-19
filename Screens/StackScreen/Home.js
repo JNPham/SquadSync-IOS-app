@@ -42,6 +42,7 @@ export default function Home({navigation}) {
         findUserName(userId);
     }, []) 
 
+    //Home page front-end
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
@@ -79,7 +80,7 @@ export default function Home({navigation}) {
                     
                 </ScrollView>
                 <TouchableOpacity style={{position: 'absolute', left:'43.5%', bottom:'9%'}}
-                                    onPress={() => navigation.navigate('GroupNavigation', {screen: 'GroupSetting'})}>
+                                    onPress={() => navigation.navigate('GroupNavigation', {screen: 'GroupCreation' })}>
                     <Ionicons name="add-circle" size={50} color="#E57A7A"/>
                 </TouchableOpacity>
             </View>

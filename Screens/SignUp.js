@@ -11,13 +11,15 @@ export default function SignUp({ navigation }) {
     const [fullname, setFullName] = useState('');
     
     //const auth = getAuth();
+    //Nhi's work:
     const db = getDatabase();
     const LogoImage = require('../assets/squadsync.png');
     const GoogleImage = require('../assets/google.png');
     const AppleImage = require('../assets/apple.png');
     const ConsoleImage = require('../assets/console.png');
-    const RankImage = require('../assets/Decor.png');
+    const RankImage = require('../assets/Decor.png'); //End Nhi's work
     
+    //Caleb's work
     function createAccount() {
         // TODO check email contains @ and is valid email
         const auth = getAuth();
@@ -79,6 +81,7 @@ export default function SignUp({ navigation }) {
         });  
     }
 
+    //Nhi's work: Front-end of Sign Up page
     return (
       <KeyboardAwareScrollView contentContainerStyle={styles.container}>
         <View style={styles.container}>
@@ -193,4 +196,4 @@ const styles = StyleSheet.create({
     marginVertical:10,
     borderRadius: 35,
   },
-});
+}); //End Nhi's work
