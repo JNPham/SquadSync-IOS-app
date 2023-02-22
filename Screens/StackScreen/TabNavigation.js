@@ -11,6 +11,7 @@ import Setting from './Setting';
 
 const Tab = createBottomTabNavigator();
 
+//Create tab navigation bar that linking to Profile page, Notification page, Home page, Friends page, and Setting page
 export function TabNavigation() {
     return (
         <Tab.Navigator screenOptions={{ tabBarStyle: {
