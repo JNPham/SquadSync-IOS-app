@@ -95,8 +95,9 @@ export default function Login({navigation}) {
                     onChangeText={(Text) => {setPassword(Text)}}
             ></TextInput>
             
-
-            <Button onPress={signIn} style={styles.optionsBtn} title="Login"/>
+            <TouchableOpacity onPress={signIn} style={styles.optionsBtn}>
+                <Text style={[styles.optionsBtn, {color: '#1D91FC'}]}>Login</Text>
+            </TouchableOpacity>
 
             <TouchableOpacity onPress={onPressSignUp} style={styles.optionsBtn}>
                 <Text style={styles.optionsBtn}>Sign Up</Text>
@@ -142,13 +143,15 @@ const styles = StyleSheet.create({
     },
     optionsBtn: {
         marginTop: 10,
-        fontSize: 18,
+        fontSize: 19,
         // position: 'absolute',
         // width:'90%',
         alignItems: 'center',
         color: '#FFFFFF',
         textAlign: 'center',
-
+        fontWeight: '800',
+        fontSize: 19,
+        letterSpacing: 0.05,
     },
     // text: {
     //     // position: 'absolute',
@@ -178,7 +181,7 @@ const styles = StyleSheet.create({
     triImage: {
         position: "absolute",
         right: "30%", 
-        bottom: "5%"
+        bottom: "2%"
     },
     google: {
         paddingRight: 25,
