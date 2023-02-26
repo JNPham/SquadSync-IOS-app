@@ -40,6 +40,11 @@ export default function SignUp({ navigation }) {
             set(ref(db, 'users/' + userId + '/groups/'), {          
               defaultGroup: "defaultGroupName"
             })
+
+            set(ref(db, 'users/' + userId + '/health/'), {          
+              stepGoal: 0,
+              stepsToday: 0,
+            })
             // Store into our just created user ID user profile structure (empty string for now)
             set(ref(db, 'users/' + userId + '/profile/'), {          
               profilePicUrl: ""

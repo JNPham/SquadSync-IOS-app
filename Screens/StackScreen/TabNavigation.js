@@ -8,6 +8,7 @@ import Profile from './Profile';
 import Notification from './Notification';
 import Friends from './Friends';
 import Setting from './Setting';
+import Health from './Health';
 
 const Tab = createBottomTabNavigator();
 
