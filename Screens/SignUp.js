@@ -36,6 +36,10 @@ export default function SignUp({ navigation }) {
               fullname: fullname,
               password: password,
             })
+            set(ref(db, 'users/' + userId + '/health/'), {          
+              stepGoal: 0,
+              stepsToday: 0,
+            })
             alert('Your account has been successfully created! Userid: ' + userId)
             // Navigate to the Home page after signing up
             navigation.navigate('TabNavigation', {screen: 'Home'}); 
