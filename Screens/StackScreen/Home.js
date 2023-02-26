@@ -44,7 +44,7 @@ export default function Home({navigation}) {
         //loadGroup();
     }, []) 
 
-    function loadGroup() {
+    /*function loadGroup() {
         const dbRef = ref(getDatabase());
         const groupRef = ref(dbRef, `users/${userId}/groups`);
         onValue(groupRef, (snapshot) => {
@@ -59,7 +59,7 @@ export default function Home({navigation}) {
 
     if (isLoading) {
         loadGroup();
-    }
+    } */
 
     function showGroups() {
 
