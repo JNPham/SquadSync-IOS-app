@@ -36,18 +36,9 @@ export default function SignUp({ navigation }) {
               fullname: fullname,
               password: password,
             })
-            // Store into our just created user ID our group structure (dummy data)
-            set(ref(db, 'users/' + userId + '/groups/'), {          
-              defaultGroup: "defaultGroupName"
-            })
-
             set(ref(db, 'users/' + userId + '/health/'), {          
               stepGoal: 0,
               stepsToday: 0,
-            })
-            // Store into our just created user ID user profile structure (empty string for now)
-            set(ref(db, 'users/' + userId + '/profile/'), {          
-              profilePicUrl: ""
             })
             alert('Your account has been successfully created! Userid: ' + userId)
             // Navigate to the Home page after signing up
