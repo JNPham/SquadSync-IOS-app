@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView, SafeAreaView, TouchableOpacity, TextInput, Pressable } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, SafeAreaView, TouchableOpacity, TextInput, ActivityIndicator, Pressable } from 'react-native';
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
@@ -10,11 +10,12 @@ import { getAuth } from '@firebase/auth';
 
 export default function Home({navigation}) {
     const groupLimit = 10;
+    let group = []
     const userId = getAuth().currentUser.uid;
-    let group = [];
     const [userName, setUserName] = useState('');
     const [search, setSearch] = useState('');
     const [groupList, setGroupList] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     //todo
     //search and return group that match Group Name
@@ -40,7 +41,29 @@ export default function Home({navigation}) {
     //call function findUserName() once the Home page loads
     useEffect(() => {
         findUserName(userId);
+        //loadGroup();
     }, []) 
+
+    function loadGroup() {
+        const dbRef = ref(getDatabase());
+        const groupRef = ref(dbRef, `users/${userId}/groups`);
+        onValue(groupRef, (snapshot) => {
+            snapshot.forEach((child) => {
+                const groupData = child.val();
+                console.log(groupData);
+            });
+        }, {
+            onlyOnce: true
+        });
+    }
+
+    if (isLoading) {
+        loadGroup();
+    }
+
+    function showGroups() {
+
+    }
 
     //Home page front-end
     return (
@@ -63,7 +86,7 @@ export default function Home({navigation}) {
                     </Avatar>
                 </TouchableOpacity>
                 <TextInput style={styles.TextBoxes}
-                    placeholder="Looking for a group? Enter the code here."
+                    placeholder="Looking for a group? Enter the name here."
                     onChangeText={(groupName) => {searchGroup(groupName)}}
                     value={search}
                 ></TextInput>
@@ -76,7 +99,7 @@ export default function Home({navigation}) {
             <View style={styles.content}>
                 <Text style={styles.groupNumber}>Your Groups: {group.length}/{groupLimit}</Text>
                 <ScrollView>
-                    
+                    {isLoading ? <ActivityIndicator size="large" /> : showGroups()} 
                     
                 </ScrollView>
                 <TouchableOpacity style={{position: 'absolute', left:'43.5%', bottom:'9%'}}
@@ -136,7 +159,7 @@ const styles = StyleSheet.create({
         height: 30,
         letterSpacing: 0.5,
         color: 'black',
-        paddingTop:'3%'
+        paddingTop:'3%',
     }
 }); 
 
