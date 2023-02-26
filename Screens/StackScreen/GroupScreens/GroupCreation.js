@@ -1,33 +1,57 @@
 import { StyleSheet, View, Text, TextInput, Switch, Image, Button, SafeAreaView, ScrollView } from 'react-native';
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { getDatabase, child, ref, set, get, push } from "firebase/database";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
 import * as ImagePicker from 'expo-image-picker';
 import { getStorage, uploadBytesResumable, uploadBytes, getDownloadURL } from "firebase/storage";
 import { ref as sRef } from 'firebase/storage';
 import { Ionicons } from "@expo/vector-icons";
-
+import { getAuth } from '@firebase/auth';
 
 export default function GroupCreation({ route, navigation }) {
     const defaultGroupPic = 'https://miro.medium.com/max/720/1*W35QUSvGpcLuxPo3SRTH4w.png';
     const memLimit = 5;
 
     const db = getDatabase();
+    const dbRef = ref(db);
     const storage = getStorage();
+    const userId = getAuth().currentUser.uid;
+    const activity = [];
 
     //const user = route.params;
+    const [userName, setUserName] = useState('');
     const [image, setImage] = useState(defaultGroupPic);
     const [groupName, setGroupName] = useState('');
     const [publicity, setPublicity] = useState('Public'); //group is set to be public by default
     const [groupInfo, setGroupInfo] = useState('');
-    const [admin, setAdmin] = useState("");
+    const [admin, setAdmin] = useState(userName); //Admin is the one who is creating group
     const [memberLimit, setMemberLimit] = useState(memLimit); //todo: increase limit if needed
     const [tracking, setTracking] = useState('Music');
     const [competition, setCompetition] = useState(false);
     const [inviteCode, setInviteCode] = useState(''); //by default, the group is public so users do not need code to join
-    const [activityLog, setActivityLog] = useState([]);
+    //const [activityLog, setActivityLog] = useState([]); //Todo: add Activity log on Group Setting page
+    //const 
+
+    //function searchs from firebase using uid and returns the currently logged in user's username
+    function findUserName(userId){
+        get(child(dbRef, `users/${userId}`)).then((snapshot) => {
+            if (snapshot.exists()) {
+                var value = snapshot.val().username;
+                setUserName(value);
+            } else {
+                console.log("No data available");
+            }
+        }).catch((error) => {
+            console.error(error);   
+        }); 
+    }
+    
+    //call function findUserName() once the Home page loads
+    useEffect(() => {
+        findUserName(userId);
+    }, [])
 
     const toggleSwitch = () => setCompetition(previousState => !previousState);
 
@@ -35,15 +59,28 @@ export default function GroupCreation({ route, navigation }) {
     // fields are not empty before create a group and save info to database (For now, it justs alert if the
     // fields are not empty)
     const saveGroupData = () => {
-        if (groupName.trim() != "" && admin.trim() != "" && memberLimit.trim() != "") {
-            var newGroup = push(ref(db, 'Groups/'), {
+        if (groupName.trim() != "" && memberLimit.trim() != "") {
+            //Upload new group's data into database
+            var newGroup = push(ref(db, 'groups/'), {
                 name: groupName,
                 info: groupInfo,
-                admin: admin,
+                admin: userId,
                 limit: memberLimit,
+                competitionMode: competition,
+                tracking: tracking,
+                activity: activity,
+            });
+            //Add current user to member list
+            set(ref(db, '/groups/' + newGroup.key + '/members/'), {          
+                memberID: userId
+            });
+            //Update user's profile to include the newly created group
+            set(ref(db, 'users/' + userId + '/groups/' + newGroup.key), {
+                groupName: groupName,
             });
             console.log("Group ID: " + newGroup.key);
-            UploadAvatar(newGroup.key);
+            uploadAvatar(newGroup.key);
+
             alert('Your group has been successfully created!');
             navigation.navigate('TabNavigation', { screen: 'Home' });
         } else {
@@ -67,14 +104,13 @@ export default function GroupCreation({ route, navigation }) {
         }
     };
 
-    const UploadAvatar = (groupID) => {
+    const uploadAvatar = (groupID) => {
         const imageRef = sRef(storage, 'Groups/' + groupID);
         uploadBytes(imageRef, image)
             .catch((error) => {
                 console.log(error.message);
             });
     };
-
 
     //Group Setting front-end
     return (
@@ -93,8 +129,8 @@ export default function GroupCreation({ route, navigation }) {
                     />
                 </TouchableOpacity>
             </SafeAreaView>
-            <View style={styles.info}>
-                <KeyboardAwareScrollView contentContainerStyle={styles.info}>
+            <SafeAreaView style={styles.info}>
+                <KeyboardAwareScrollView contentContainerStyle={{flexGrow:1,justifyContent:'space-between'}}>
                     <View style={{ flexDirection: "row" }}>
                         <TouchableOpacity onPress={() => setPublicity("Public")} style={{ flexDirection: "row", alignItems: 'flex-end', paddingRight: '37%' }}>
                             <Text style={[styles.text, { paddingRight: '3%', paddingLeft: '8%' }]}>
@@ -127,10 +163,11 @@ export default function GroupCreation({ route, navigation }) {
                         maxLength={160}></TextInput>
 
                     <Text style={styles.text}>Admin: </Text>
-                    <TextInput value={admin} onChangeText={(admin) => { // Admin --> todo: change code to choose admin from a list of members
-                        setAdmin(admin)
-                    }}
-                        placeholder="Who is the group admin?" style={[styles.textInput]}></TextInput>
+                    <TextInput value={admin} 
+                        editable = 'False'
+                        placeholder={userName} 
+                        style={[styles.textInput]}>
+                    </TextInput>
 
                     <Text style={styles.text}>Member Limit: </Text>
                     <TextInput value={memberLimit} onChangeText={(memberLimit) => { // Member Limit
@@ -171,18 +208,8 @@ export default function GroupCreation({ route, navigation }) {
                             <Ionicons name={tracking === 'Health' ? "radio-button-on" : "radio-button-off"} size={30} color="#F8C272" />
                         </TouchableOpacity>
                     </View>
-                    
-                    <View style={{flexDirection: "row"}}>
-                        <Text style={styles.text}>Invite Code: </Text>
-                        <TextInput value={groupName} onChangeText={(groupName) => { // Group's name
-                            setGroupName(groupName)
-                        }}
-                            placeholder="Tab to enter you group's name" 
-                            editable='false'
-                            style={[styles.textInput]}></TextInput>
-                    </View>
                 </KeyboardAwareScrollView>
-            </View>
+            </SafeAreaView>
         </View>
     );
 }
@@ -218,15 +245,11 @@ const styles = StyleSheet.create({
     info: {
         flex: 3,
         backgroundColor: 'white',
-        //alignItems: 'center',
-        //justifyContent: 'center',
     },
     textInput: {
         width: '90%',
         fontSize: 16,
         padding: 10,
-        //borderBottomWidth: 2,
-        //marginVertical: 8,
         marginTop: 2,
         backgroundColor: '#F4F4F4',
         borderRadius: 5,

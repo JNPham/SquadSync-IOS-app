@@ -36,14 +36,6 @@ export default function SignUp({ navigation }) {
               fullname: fullname,
               password: password,
             })
-            // Store into our just created user ID our group structure (dummy data)
-            set(ref(db, 'users/' + userId + '/groups/'), {          
-              defaultGroup: "defaultGroupName"
-            })
-            // Store into our just created user ID user profile structure (empty string for now)
-            set(ref(db, 'users/' + userId + '/profile/'), {          
-              profilePicUrl: ""
-            })
             alert('Your account has been successfully created! Userid: ' + userId)
             // Navigate to the Home page after signing up
             navigation.navigate('TabNavigation', {screen: 'Home'}); 
