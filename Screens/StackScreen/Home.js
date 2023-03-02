@@ -57,7 +57,6 @@ export default function Home({navigation}) {
         });
     }
 
-
     function showGroups() {
 
     }
