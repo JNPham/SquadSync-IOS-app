@@ -57,6 +57,21 @@ export default function Home({navigation}) {
         });
     }
 
+    const renderItem = ({ item }) => {
+        let urlGroup = item.url;
+        return (
+            <View style={{alignItems:'center', paddingTop:'2%', paddingLeft: '2%', paddingRight: '2%'}}>
+                <TouchableOpacity style={{alignItems:'center'}}>
+                    <Image
+                        source={{ uri: urlGroup }}
+                        style={{ width: 160, height: 140, borderRadius: 60 / 2}}
+                    />
+                    <Text style={{fontWeight: '600', paddingTop: '1.5%'}}>{item.name}</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    }
+
     function showGroups() {
 
     }
