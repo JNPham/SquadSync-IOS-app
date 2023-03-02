@@ -32,7 +32,6 @@ export default function GroupCreation({ route, navigation }) {
     const [competition, setCompetition] = useState(false);
     const [inviteCode, setInviteCode] = useState(''); //by default, the group is public so users do not need code to join
     //const [activityLog, setActivityLog] = useState([]); //Todo: add Activity log on Group Setting page
-    //const 
 
     //function searchs from firebase using uid and returns the currently logged in user's username
     function findUserName(userId){
@@ -58,8 +57,8 @@ export default function GroupCreation({ route, navigation }) {
     //Function called when "Save" is clicked. It checks to make sure the group name, admin, and member limit 
     // fields are not empty before create a group and save info to database (For now, it justs alert if the
     // fields are not empty)
-    const saveGroupData = () => {
-        if (groupName.trim() != "" && memberLimit.trim() != "") {
+    const saveGroupData = async () => {
+        if (groupName.trim() != "" && memberLimit > 1) {
             //Upload new group's data into database
             var newGroup = push(ref(db, 'groups/'), {
                 name: groupName,
@@ -70,16 +69,21 @@ export default function GroupCreation({ route, navigation }) {
                 tracking: tracking,
                 activity: activity,
             });
-            //Add current user to member list
+            //Add current user to group's member list
             set(ref(db, '/groups/' + newGroup.key + '/members/'), {          
                 memberID: userId
             });
-            //Update user's profile to include the newly created group
+            //Add to user's profile the url to download the group avatar
+            const url = await uploadImage(newGroup.key);
+            //setImageURL(url);
+            set(ref(db, '/groups/' + newGroup.key + '/url'), {
+                groupURL: url,
+            });
+            //Add to user's profile the url to download the group avatar and group name
             set(ref(db, 'users/' + userId + '/groups/' + newGroup.key), {
+                groupURL: url,
                 groupName: groupName,
             });
-            console.log("Group ID: " + newGroup.key);
-            uploadAvatar(newGroup.key);
 
             alert('Your group has been successfully created!');
             navigation.navigate('TabNavigation', { screen: 'Home' });
@@ -88,6 +92,7 @@ export default function GroupCreation({ route, navigation }) {
         }
     }
 
+    // Function used to access user's image library, pick and display an image 
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -104,15 +109,26 @@ export default function GroupCreation({ route, navigation }) {
         }
     };
 
-    const uploadAvatar = (groupID) => {
+    const uploadImage = async (groupID) => {
+        const blob = await new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.onload = function () {
+                resolve(xhr.response);
+            };
+            xhr.onerror = function () {
+                reject(new TypeError('Network request failed'));
+            };
+            xhr.responseType = 'blob';
+            xhr.open('GET', image, true);
+            xhr.send(null);
+        })
         const imageRef = sRef(storage, 'Groups/' + groupID);
-        uploadBytes(imageRef, image)
-            .catch((error) => {
-                console.log(error.message);
-            });
-    };
+        const snapshot = await uploadBytes(imageRef, blob);
+        blob.close();
+        return await getDownloadURL(imageRef);
+    }
 
-    //Group Setting front-end
+    //Group Creation front-end
     return (
         <View style={styles.container}>
             <SafeAreaView style={styles.header}>
