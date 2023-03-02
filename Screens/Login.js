@@ -5,7 +5,6 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { StyleSheet, Text, View, Image, TextInput, Button, TouchableOpacity} from "react-native";
 import { authentication } from "../config/firebase";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { color } from "react-native-elements/dist/helpers";
 
 // For later: Google Sign in Authentication Information 
 // https://blog.jscrambler.com/how-to-integrate-firebase-authentication-with-an-expo-app#:~:text=From%20the%20left%20side%20menu,it%2C%20and%20then%20click%20Save.
