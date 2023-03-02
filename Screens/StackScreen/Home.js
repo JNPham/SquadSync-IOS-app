@@ -12,7 +12,7 @@ import { ref as sRef } from 'firebase/storage';
 export default function Home({ navigation }) {
     const db = getDatabase();
     const storage = getStorage();
-    const groupLimit = 10;
+    const groupLimit = 20;
     const userId = getAuth().currentUser.uid;
 
     const [userName, setUserName] = useState('');
@@ -50,6 +50,7 @@ export default function Home({ navigation }) {
     }, [])
 
     function loadGroup() {
+        setIsRefreshing(false);
         const groupRef = ref(db, `users/${userId}/groups`);
         onValue(groupRef, (snapshot) => {
             let groups = []
@@ -64,40 +65,30 @@ export default function Home({ navigation }) {
             });
             setNumGroup(groups.length);
             setGroupList(groups);
-            setIsRefreshing(false);
         })
-
-        // onChildAdded(groupRef, (data) => {
-        //     addCommentElement(postElement, data.key, data.val().text, data.val().author);
-        // });
-
-        // onChildChanged(groupRef, (data) => {
-        //     setCommentValues(postElement, data.key, data.val().text, data.val().author);
-        // });
-
-        // onChildRemoved(groupRef, (data) => {
-        //     deleteComment(postElement, data.key);
-        // });
     }
 
     const renderItem = ({ item }) => {
         let urlGroup = item.url;
         return (
-            <View>
-                <Image
-                    source={{ uri: urlGroup }}
-                    style={{ width: 140, height: 140, borderRadius: 140 / 2, borderWidth: 4 }}
-                />
-                <Text>{item.name}</Text>
+            <View style={{alignItems:'center', paddingTop:'2%', paddingLeft: '2%', paddingRight: '2%'}}>
+                <TouchableOpacity style={{alignItems:'center'}}>
+                    <Image
+                        source={{ uri: urlGroup }}
+                        style={{ width: 160, height: 140, borderRadius: 60 / 2}}
+                    />
+                    <Text style={{fontWeight: '600', paddingTop: '1.5%'}}>{item.name}</Text>
+                </TouchableOpacity>
             </View>
         );
     }
 
     function showGroups() {
         return (
-            <View style={styles.content}>
+            <View style={[styles.content]}>
                 <Text style={styles.groupNumber}>Your Groups: {groupList.length}/{groupLimit}</Text>
                 <FlatList
+                    style={styles.groupDisplay}
                     data={groupList}
                     refreshing={isRefreshing}
                     onRefresh={() => {
@@ -108,7 +99,8 @@ export default function Home({ navigation }) {
                     keyExtractor={item => item.id}
                     extraData={groupList}
                     horizontal={false}
-                    //numColumns=''
+                    numColumns={2}
+                    showsVerticalScrollIndicator={false}
                 />
             </View>
         );
@@ -139,13 +131,13 @@ export default function Home({ navigation }) {
                     onChangeText={(groupName) => { searchGroup(groupName) }}
                     value={search}
                 ></TextInput>
-                <Pressable>
+                <TouchableOpacity>
                     <Text style={{
                         color: 'white', fontSize: '14', fontWeight: '600',
-                        position: 'absolute', top: 73, left: '17%',
+                        position: 'absolute', top:65, left: '17%',
                         textDecorationLine: 'underline'
                     }}>Explore our public groups here!</Text>
-                </Pressable>
+                </TouchableOpacity>
             </View>
             <View style={styles.content}>
                 <View>
@@ -180,7 +172,7 @@ const styles = StyleSheet.create({
         marginLeft: 60,
     },
     header: {
-        flex: 0.85,
+        flex: 0.75,
         backgroundColor: '#23272D',
         marginLeft: '5%',
     },
@@ -210,6 +202,10 @@ const styles = StyleSheet.create({
         letterSpacing: 0.5,
         color: 'black',
         paddingTop: '3%',
+    },
+    groupDisplay: {
+        height: '86.7%',
+        flexGrow: 0
     }
 });
 
