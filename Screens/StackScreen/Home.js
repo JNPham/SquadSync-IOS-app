@@ -1,31 +1,36 @@
-import { StyleSheet, Text, View, ScrollView, SafeAreaView, TouchableOpacity, TextInput, ActivityIndicator, Pressable } from 'react-native';
+import { StyleSheet, Text, FlatList, Image, View, ScrollView, SafeAreaView, TouchableOpacity, TextInput, ActivityIndicator, Pressable } from 'react-native';
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { getDatabase, child, ref, set, get} from "firebase/database";
-import { color } from 'react-native-elements/dist/helpers';
+import { getDatabase, child, ref, set, get, onValue } from "firebase/database";
 import { Ionicons } from '@expo/vector-icons';
 import { Avatar } from 'react-native-elements';
 import { getAuth } from '@firebase/auth';
+import { getStorage, getDownloadURL } from "firebase/storage";
+import { ref as sRef } from 'firebase/storage';
 
-export default function Home({navigation}) {
-    const groupLimit = 10;
-    let group = []
+export default function Home({ navigation }) {
+    const db = getDatabase();
+    const storage = getStorage();
+    const groupLimit = 20;
     const userId = getAuth().currentUser.uid;
+
     const [userName, setUserName] = useState('');
     const [search, setSearch] = useState('');
     const [groupList, setGroupList] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [numGroup, setNumGroup] = useState(0);
+    const [isRefreshing, setIsRefreshing] = useState(false);
+    //const [urlGroup, setUrlGroup] = useState('https://miro.medium.com/max/720/1*W35QUSvGpcLuxPo3SRTH4w.png');
 
     //todo
-    //search and return group that match Group Name
-    function searchGroup(groupName) { 
+    //search and return group that match Group Name -> Search bar function
+    function searchGroup(groupName) {
         setSearch(groupName)
     }
-    
+
     //function searchs from firebase using uid and returns the currently logged in user's username
-    function findUserName(userId){
-        const dbRef = ref(getDatabase());
+    function findUserName(userId) {
+        const dbRef = ref(db);
         get(child(dbRef, `users/${userId}`)).then((snapshot) => {
             if (snapshot.exists()) {
                 var value = snapshot.val().username;
@@ -34,27 +39,33 @@ export default function Home({navigation}) {
                 console.log("No data available");
             }
         }).catch((error) => {
-            console.error(error);   
-        }); 
+            console.error(error);
+        });
     }
-    
+
     //call function findUserName() once the Home page loads
     useEffect(() => {
         findUserName(userId);
-        //loadGroup();
-    }, []) 
+        loadGroup();
+    }, [])
 
     function loadGroup() {
-        const dbRef = ref(getDatabase());
-        const groupRef = ref(dbRef, `users/${userId}/groups`);
+        setIsRefreshing(false);
+        const groupRef = ref(db, `users/${userId}/groups`);
         onValue(groupRef, (snapshot) => {
+            let groups = []
+            setGroupList(groups);
             snapshot.forEach((child) => {
-                const groupData = child.val();
-                console.log(groupData);
+                let groupData = {
+                    id: child.key,
+                    name: child.val().groupName,
+                    url: child.val().groupURL,
+                };
+                groups.push(groupData);
             });
-        }, {
-            onlyOnce: true
-        });
+            setNumGroup(groups.length);
+            setGroupList(groups);
+        })
     }
 
     const renderItem = ({ item }) => {
@@ -73,7 +84,26 @@ export default function Home({navigation}) {
     }
 
     function showGroups() {
-
+        return (
+            <View style={[styles.content]}>
+                <Text style={styles.groupNumber}>Your Groups: {groupList.length}/{groupLimit}</Text>
+                <FlatList
+                    style={styles.groupDisplay}
+                    data={groupList}
+                    refreshing={isRefreshing}
+                    onRefresh={() => {
+                        loadGroup();
+                        setIsRefreshing(true);
+                    }}
+                    renderItem={renderItem}
+                    keyExtractor={item => item.id}
+                    extraData={groupList}
+                    horizontal={false}
+                    numColumns={2}
+                    showsVerticalScrollIndicator={false}
+                />
+            </View>
+        );
     }
 
     //Home page front-end
@@ -82,46 +112,47 @@ export default function Home({navigation}) {
             <View style={styles.header}>
                 <Text style={styles.text}>Hello {userName}!</Text>
                 <Text style={styles.text}>How are you doing today?</Text>
-                <TouchableOpacity onPress={() => navigation.navigate('Notification')} 
-                                style={{position: 'absolute', right: '5%', top: '5%'}}>
-                    <Ionicons name="notifications-circle" size={45} color="#D9D9D9"/>
+                <TouchableOpacity onPress={() => navigation.navigate('Notification')}
+                    style={{ position: 'absolute', right: '5%', top: '5%' }}>
+                    <Ionicons name="notifications-circle" size={45} color="#D9D9D9" />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => navigation.navigate('Profile')}
-                                style={{position: 'absolute', top: '5%'}}>
+                    style={{ position: 'absolute', top: '5%' }}>
                     <Avatar
                         rounded
-                        containerStyle={{width:40, height:40}}
+                        containerStyle={{ width: 40, height: 40 }}
                         source={{ //add user's avatar
-                            uri:'https://i.mydramalist.com/EoPbW_5f.jpg'
+                            uri: 'https://i.mydramalist.com/EoPbW_5f.jpg'
                         }}>
                     </Avatar>
                 </TouchableOpacity>
                 <TextInput style={styles.TextBoxes}
                     placeholder="Looking for a group? Enter the name here."
-                    onChangeText={(groupName) => {searchGroup(groupName)}}
+                    onChangeText={(groupName) => { searchGroup(groupName) }}
                     value={search}
                 ></TextInput>
-                <Pressable>
-                    <Text style={{color:'white', fontSize:'14', fontWeight: '600', 
-                                position: 'absolute', top: 73, left:'17%',
-                                textDecorationLine: 'underline'}}>Explore our public groups here!</Text>
-                </Pressable>
-            </View>
-            <View style={styles.content}>
-                <Text style={styles.groupNumber}>Your Groups: {group.length}/{groupLimit}</Text>
-                <ScrollView>
-                    {isLoading ? <ActivityIndicator size="large" /> : showGroups()} 
-                    
-                </ScrollView>
-                <TouchableOpacity style={{position: 'absolute', left:'43.5%', bottom:'9%'}}
-                                    onPress={() => navigation.navigate('GroupNavigation', {screen: 'GroupCreation' })}>
-                    <Ionicons name="add-circle" size={50} color="#E57A7A"/>
+                <TouchableOpacity>
+                    <Text style={{
+                        color: 'white', fontSize: '14', fontWeight: '600',
+                        position: 'absolute', top:65, left: '17%',
+                        textDecorationLine: 'underline'
+                    }}>Explore our public groups here!</Text>
                 </TouchableOpacity>
             </View>
-            
+            <View style={styles.content}>
+                <View>
+                    {/* {isLoading ? <ActivityIndicator size="large" /> : showGroups()} */}
+                    {showGroups()}
+                </View>
+                <TouchableOpacity style={{ position: 'absolute', left: '43.5%', bottom: '9%' }}
+                    onPress={() => navigation.navigate('GroupNavigation', { screen: 'GroupCreation' })}>
+                    <Ionicons name="add-circle" size={50} color="#E57A7A" />
+                </TouchableOpacity>
+            </View>
+
         </SafeAreaView>
     );
-} 
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -141,7 +172,7 @@ const styles = StyleSheet.create({
         marginLeft: 60,
     },
     header: {
-        flex: 0.85,
+        flex: 0.75,
         backgroundColor: '#23272D',
         marginLeft: '5%',
     },
@@ -150,19 +181,19 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         alignItems: 'center',
         //justifyContent: 'center',
-    },    
+    },
     TextBoxes: { //search bar
         position: 'absolute',
-        width:'95%',
+        width: '95%',
         top: '35%',
-        fontSize:13,
+        fontSize: 13,
         alignItems: 'center',
-        padding:13,
+        padding: 13,
         backgroundColor: '#D9D9D9',
-        marginVertical:10,
+        marginVertical: 10,
         borderRadius: 35,
     },
-    groupNumber:{
+    groupNumber: {
         fontStyle: 'normal',
         fontSize: 20,
         fontWeight: '700',
@@ -170,7 +201,11 @@ const styles = StyleSheet.create({
         height: 30,
         letterSpacing: 0.5,
         color: 'black',
-        paddingTop:'3%',
+        paddingTop: '3%',
+    },
+    groupDisplay: {
+        height: '86.7%',
+        flexGrow: 0
     }
-}); 
+});
 
