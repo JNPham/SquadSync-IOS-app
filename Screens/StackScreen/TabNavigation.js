@@ -61,7 +61,7 @@ export function TabNavigation() {
                                 <MaterialCommunityIcons name="account-group" size={35} color={focused ? "#B6B5B5" : "black"}/>
                             ),
                         }}/>
-            <Tab.Screen name="Setting" component={Setting} 
+            <Tab.Screen name="Setting" component={Health} 
                         options={{
                             tabBarIcon: ({ focused, color }) => (
                                 <Ionicons name="ios-settings" size={35} color={focused ? "#B6B5B5" : "black"}/>
