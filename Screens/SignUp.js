@@ -35,6 +35,7 @@ export default function SignUp({ navigation }) {
               username: username,
               fullname: fullname,
               password: password,
+              darkmode: false,
             })
             set(ref(db, 'users/' + userId + '/health/'), {          
               stepGoal: 0,
