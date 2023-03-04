@@ -11,13 +11,15 @@ export default function SignUp({ navigation }) {
     const [fullname, setFullName] = useState('');
     
     //const auth = getAuth();
+    //Nhi's work:
     const db = getDatabase();
     const LogoImage = require('../assets/squadsync.png');
     const GoogleImage = require('../assets/google.png');
     const AppleImage = require('../assets/apple.png');
     const ConsoleImage = require('../assets/console.png');
-    const RankImage = require('../assets/Decor.png');
+    const RankImage = require('../assets/Decor.png'); //End Nhi's work
     
+    //Caleb's work
     function createAccount() {
         // TODO check email contains @ and is valid email
         const auth = getAuth();
@@ -34,13 +36,9 @@ export default function SignUp({ navigation }) {
               fullname: fullname,
               password: password,
             })
-            // Store into our just created user ID our group structure (dummy data)
-            set(ref(db, 'users/' + userId + '/groups/'), {          
-              defaultGroup: "defaultGroupName"
-            })
-            // Store into our just created user ID user profile structure (empty string for now)
-            set(ref(db, 'users/' + userId + '/profile/'), {          
-              profilePicUrl: ""
+            set(ref(db, 'users/' + userId + '/health/'), {          
+              stepGoal: 0,
+              stepsToday: 0,
             })
             alert('Your account has been successfully created! Userid: ' + userId)
             // Navigate to the Home page after signing up
@@ -79,6 +77,7 @@ export default function SignUp({ navigation }) {
         });  
     }
 
+    //Nhi's work: Front-end of Sign Up page
     return (
       <KeyboardAwareScrollView contentContainerStyle={styles.container}>
         <View style={styles.container}>
@@ -98,7 +97,7 @@ export default function SignUp({ navigation }) {
 
             <Text style={[styles.text, {top:'40%'}]}>Or simply fill out the information below</Text>
 
-            <TextInput value={fullname} onChangeText={(fullname) => { // FULLNAME --> todo: change code to Full Name
+            <TextInput value={fullname} onChangeText={(fullname) => { // FULLNAME
                 setFullName(fullname)
                 }
             } 
@@ -193,4 +192,4 @@ const styles = StyleSheet.create({
     marginVertical:10,
     borderRadius: 35,
   },
-});
+}); //End Nhi's work

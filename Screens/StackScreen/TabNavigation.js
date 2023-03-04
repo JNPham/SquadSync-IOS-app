@@ -8,9 +8,11 @@ import Profile from './Profile';
 import Notification from './Notification';
 import Friends from './Friends';
 import Setting from './Setting';
+import Health from './Health';
 
 const Tab = createBottomTabNavigator();
 
+//Create tab navigation bar that linking to Profile page, Notification page, Home page, Friends page, and Setting page
 export function TabNavigation() {
     return (
         <Tab.Navigator screenOptions={{ tabBarStyle: {

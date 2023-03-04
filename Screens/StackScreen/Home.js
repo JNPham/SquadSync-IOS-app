@@ -1,23 +1,75 @@
-import { StyleSheet, Text, View, ScrollView, SafeAreaView, TouchableOpacity, TextInput, Pressable } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, SafeAreaView, TouchableOpacity, TextInput, ActivityIndicator, Pressable } from 'react-native';
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { getDatabase, ref, set, onValue, push, update, remove } from "firebase/database";
+import { getDatabase, child, ref, set, get} from "firebase/database";
 import { color } from 'react-native-elements/dist/helpers';
 import { Ionicons } from '@expo/vector-icons';
 import { Avatar } from 'react-native-elements';
+import { getAuth } from '@firebase/auth';
 
 export default function Home({navigation}) {
+    const groupLimit = 10;
+    let group = []
+    const userId = getAuth().currentUser.uid;
+    const [userName, setUserName] = useState('');
     const [search, setSearch] = useState('');
+    const [groupList, setGroupList] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
-    function searchGroup(groupName) { //search and return group that match Group Name
+    //todo
+    //search and return group that match Group Name
+    function searchGroup(groupName) { 
         setSearch(groupName)
     }
     
+    //function searchs from firebase using uid and returns the currently logged in user's username
+    function findUserName(userId){
+        const dbRef = ref(getDatabase());
+        get(child(dbRef, `users/${userId}`)).then((snapshot) => {
+            if (snapshot.exists()) {
+                var value = snapshot.val().username;
+                setUserName(value);
+            } else {
+                console.log("No data available");
+            }
+        }).catch((error) => {
+            console.error(error);   
+        }); 
+    }
+    
+    //call function findUserName() once the Home page loads
+    useEffect(() => {
+        findUserName(userId);
+        //loadGroup();
+    }, []) 
+
+    /*function loadGroup() {
+        const dbRef = ref(getDatabase());
+        const groupRef = ref(dbRef, `users/${userId}/groups`);
+        onValue(groupRef, (snapshot) => {
+            snapshot.forEach((child) => {
+                const groupData = child.val();
+                console.log(groupData);
+            });
+        }, {
+            onlyOnce: true
+        });
+    }
+
+    if (isLoading) {
+        loadGroup();
+    } */
+
+    function showGroups() {
+
+    }
+
+    //Home page front-end
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
-                <Text style={styles.text}>Hello!</Text>
+                <Text style={styles.text}>Hello {userName}!</Text>
                 <Text style={styles.text}>How are you doing today?</Text>
                 <TouchableOpacity onPress={() => navigation.navigate('Notification')} 
                                 style={{position: 'absolute', right: '5%', top: '5%'}}>
@@ -34,7 +86,7 @@ export default function Home({navigation}) {
                     </Avatar>
                 </TouchableOpacity>
                 <TextInput style={styles.TextBoxes}
-                    placeholder="Looking for a group? Enter the code here."
+                    placeholder="Looking for a group? Enter the name here."
                     onChangeText={(groupName) => {searchGroup(groupName)}}
                     value={search}
                 ></TextInput>
@@ -45,10 +97,17 @@ export default function Home({navigation}) {
                 </Pressable>
             </View>
             <View style={styles.content}>
+                <Text style={styles.groupNumber}>Your Groups: {group.length}/{groupLimit}</Text>
                 <ScrollView>
-                    <Text>Welcome to SquadSync Homepage</Text>
+                    {isLoading ? <ActivityIndicator size="large" /> : showGroups()} 
+                    
                 </ScrollView>
+                <TouchableOpacity style={{position: 'absolute', left:'43.5%', bottom:'9%'}}
+                                    onPress={() => navigation.navigate('GroupNavigation', {screen: 'GroupCreation' })}>
+                    <Ionicons name="add-circle" size={50} color="#E57A7A"/>
+                </TouchableOpacity>
             </View>
+            
         </SafeAreaView>
     );
 } 
@@ -78,8 +137,8 @@ const styles = StyleSheet.create({
     content: {
         flex: 3,
         backgroundColor: 'white',
-        //alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: 'center',
+        //justifyContent: 'center',
     },    
     TextBoxes: { //search bar
         position: 'absolute',
@@ -92,5 +151,15 @@ const styles = StyleSheet.create({
         marginVertical:10,
         borderRadius: 35,
     },
+    groupNumber:{
+        fontStyle: 'normal',
+        fontSize: 20,
+        fontWeight: '700',
+        lineHeight: 19,
+        height: 30,
+        letterSpacing: 0.5,
+        color: 'black',
+        paddingTop:'3%',
+    }
 }); 
 
