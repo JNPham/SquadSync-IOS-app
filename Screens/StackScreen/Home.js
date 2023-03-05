@@ -78,7 +78,11 @@ export default function Home({ navigation }) {
                         style={{ width: 160, height: 140, borderRadius: 60 / 2}}
                         onPress={() => navigation.navigate('GroupNavigation', { screen: 'GroupHomePage' })}
                     />
-                    <Text style={{fontWeight: '600', paddingTop: '1.5%'}}>{item.name}</Text>
+                    <Text 
+                    style={{fontWeight: '600', paddingTop: '1.5%'}}
+                    onPress={() => navigation.navigate('GroupNavigation', { screen: 'GroupHomePage' })}>
+                    {item.name}
+                    </Text>
                 </TouchableOpacity>
             </View>
         );

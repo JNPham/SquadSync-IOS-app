@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, TextInput, Switch, Image, Button, SafeAreaView, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, TextInput, Switch, Image, Button, SafeAreaView, ScrollView, KeyboardAvoidingView } from 'react-native';
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import { useState, useEffect } from 'react';
@@ -11,26 +11,70 @@ import { Ionicons } from "@expo/vector-icons";
 import { getAuth } from '@firebase/auth';
 
 export default function GroupHomePage({ route, navigation }) {
+
+    
+    const renderGroupName = ({ item }) => {
+        return (
+            <View>
+                <Text style={styles.text}>
+                    {item.name}
+                </Text>
+            </View>
+        );
+    }
+
     return(
-        <SafeAreaView>
-            <Text style={styles.text}> This is the group home </Text>
+        <KeyboardAvoidingView
+        style={styles.container}
+        behavior="padding"
+      >
+        <SafeAreaView style = {styles.container}>
+            <View style = {styles.header}>
+                <Text style = {styles.text}>Shoe Club</Text>
+            </View>
+            <View style = {styles.bottom}>
+            <TextInput
+                style={styles.TextBoxes}
+                keyboardType="ascii-capable"
+                />
+            </View>
         </SafeAreaView>
+    </KeyboardAvoidingView>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: 'white',
+    },
+    header: {
+        flex: .10,
         backgroundColor: '#23272D',
     },
     text: {
         fontStyle: 'normal',
-        fontSize: 16,
+        fontSize: 25,
         fontWeight: '700',
-        display: 'flex',
-        color: 'black',
+        textAlign: 'center',
+        color: 'green',
         paddingTop: '5%',
-        paddingBottom: '1%',
-        paddingLeft: '5%'
+        paddingBottom: '5%',
     },
+    TextBoxes: { //search bar
+        position: 'absolute',
+        width: '95%',
+        fontSize: 13,
+        alignItems: 'center',
+        padding: 13,
+        backgroundColor: '#D9D9D9',
+        marginVertical: 10,
+        borderRadius: 35,
+    },
+    bottom: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        marginBottom: 10,
+        marginLeft: 13,
+      }
 });
