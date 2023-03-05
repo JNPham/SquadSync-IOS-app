@@ -76,6 +76,7 @@ export default function Home({ navigation }) {
                     <Image
                         source={{ uri: urlGroup }}
                         style={{ width: 160, height: 140, borderRadius: 60 / 2}}
+                        onPress={() => navigation.navigate('GroupNavigation', { screen: 'GroupHomePage' })}
                     />
                     <Text style={{fontWeight: '600', paddingTop: '1.5%'}}>{item.name}</Text>
                 </TouchableOpacity>
@@ -102,7 +103,9 @@ export default function Home({ navigation }) {
                     numColumns={2}
                     showsVerticalScrollIndicator={false}
                 />
+
             </View>
+  
         );
     }
 
