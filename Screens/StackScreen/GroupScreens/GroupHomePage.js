@@ -26,11 +26,14 @@ export default function GroupHomePage({ route, navigation }) {
     return(
         <KeyboardAvoidingView
         style={styles.container}
-        behavior="padding"
-      >
+        behavior="padding">
         <SafeAreaView style = {styles.container}>
             <View style = {styles.header}>
                 <Text style = {styles.text}>Shoe Club</Text>
+                <TouchableOpacity onPress={() => navigation.navigate('GroupSettingsNavigation', { screen: 'GroupSettingPage' })}
+                    style={{ position: 'absolute', right: '5%', top: '5%' }}>
+                    <Ionicons name="ellipse" size={45} color="white" />
+                </TouchableOpacity>
             </View>
             <View style = {styles.bottom}>
             <TextInput

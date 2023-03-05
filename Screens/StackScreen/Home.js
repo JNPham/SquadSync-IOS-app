@@ -123,6 +123,9 @@ export default function Home({ navigation }) {
                     style={{ position: 'absolute', right: '5%', top: '5%' }}>
                     <Ionicons name="notifications-circle" size={45} color="#D9D9D9" />
                 </TouchableOpacity>
+
+
+                
                 <TouchableOpacity onPress={() => navigation.navigate('Profile')}
                     style={{ position: 'absolute', top: '5%' }}>
                     <Avatar
