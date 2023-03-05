@@ -10,7 +10,7 @@ import { ref as sRef } from 'firebase/storage';
 import { Ionicons } from "@expo/vector-icons";
 import { getAuth } from '@firebase/auth';
 
-export default function GroupHomePage({ route, navigation }) {
+export default function GroupHomePage({ navigation }) {
 
     
     const renderGroupName = ({ item }) => {
@@ -30,9 +30,9 @@ export default function GroupHomePage({ route, navigation }) {
         <SafeAreaView style = {styles.container}>
             <View style = {styles.header}>
                 <Text style = {styles.text}>Shoe Club</Text>
-                <TouchableOpacity onPress={() => navigation.navigate('GroupSettingsNavigation', { screen: 'GroupSettingPage' })}
-                    style={{ position: 'absolute', right: '5%', top: '5%' }}>
-                    <Ionicons name="ellipse" size={45} color="white" />
+                <TouchableOpacity style={{ position: 'absolute', right: '5%', top: '5%' }}
+                onPress={() => navigation.navigate('GroupNavigation', { screen: 'GroupSettingPage' })}>
+                    <Ionicons name="ios-settings" size={45} color="white" />
                 </TouchableOpacity>
             </View>
             <View style = {styles.bottom}>

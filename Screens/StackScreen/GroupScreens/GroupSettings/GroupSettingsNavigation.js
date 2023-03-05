@@ -1,6 +1,5 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import GroupSettingPage from "./GroupSettingPage";
 
 
 
@@ -10,7 +9,7 @@ const Stack = createStackNavigator();
 export function GroupSettingsNavigation() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}> 
-      <Stack.Screen name="GroupSettingPage" component={GroupSettingPage} />
+      <Stack.Screen name="GroupSettingPage" component={'GroupSettingPage'}/>
     </Stack.Navigator>
   )
 
