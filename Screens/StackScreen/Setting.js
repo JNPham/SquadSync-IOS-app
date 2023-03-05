@@ -5,7 +5,7 @@ import { getDatabase, ref, update, get, child, remove } from "firebase/database"
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { getAuth } from '@firebase/auth';
 
-export default function Setting() {
+export default function Setting({navigation}) {
     const [darkMode, setDarkMode] = useState(false);
     const LogoImage = require('../../assets/squadsync.png');
     
@@ -13,6 +13,7 @@ export default function Setting() {
     const dbRef = ref(db);
     const userId = getAuth().currentUser.uid;
 
+    // Once the Setting page loads, it will get the value of darkmode variable from the database
     useEffect(() => {
         get(child(dbRef, `users/${userId}`)).then((snapshot) => {
             if (snapshot.exists()) {
@@ -24,6 +25,7 @@ export default function Setting() {
         });
     }, [])
 
+    // Change boolean value of the darkmode variable when toggle the switch, then save its value to database
     const toggleSwitch = () => {
         setDarkMode(previousState => !previousState);
         update(ref(db, 'users/' + userId), {
@@ -53,16 +55,18 @@ export default function Setting() {
                 </View>
                 <View style={{ backgroundColor: "#B9B9B9", height: 1.5, marginTop: '5%' }} />
                 
-                <TouchableOpacity style={{ flexDirection: "row", justifyContent:'space-between', paddingTop: '5%' }}>
+                <TouchableOpacity style={{ flexDirection: "row", justifyContent:'space-between', paddingTop: '5%' }}
+                                onPress={() => navigation.navigate('PrivacySecurity')}>
                     <View style={{ flexDirection: "row", alignItems:'center'}}>
                         <MaterialCommunityIcons name="lock" size={35} color="black" />
-                        <Text style={[styles.text]}>Private & Security</Text>
+                        <Text style={[styles.text]}>Privacy & Security</Text>
                     </View>
                     <MaterialCommunityIcons name="chevron-right" size={35} color="black" />
                 </TouchableOpacity>
                 <View style={{ backgroundColor: "#B9B9B9", height: 1.5, marginTop: '5%' }} />
                 
-                <TouchableOpacity style={{ flexDirection: "row", justifyContent:'space-between', paddingTop: '5%' }}>
+                <TouchableOpacity style={{ flexDirection: "row", justifyContent:'space-between', paddingTop: '5%' }}
+                                onPress={() => navigation.navigate('HelpCenter')}>
                     <View style={{ flexDirection: "row", alignItems:'center'}}>
                         <MaterialCommunityIcons name="headphones" size={35} color="black" />
                         <Text style={[styles.text]}>Help Center</Text>
@@ -71,7 +75,8 @@ export default function Setting() {
                 </TouchableOpacity>
                 <View style={{ backgroundColor: "#B9B9B9", height: 1.5, marginTop: '5%' }} />
 
-                <TouchableOpacity style={{ flexDirection: "row", justifyContent:'space-between', paddingTop: '5%' }}>
+                <TouchableOpacity style={{ flexDirection: "row", justifyContent:'space-between', paddingTop: '5%' }}
+                                onPress={() => navigation.navigate('AboutUs')}>
                     <View style={{ flexDirection: "row", alignItems:'center'}}>
                         <Image source={LogoImage} style={{width:35, height: 35}} />
                         <Text style={[styles.text]}>About Us</Text>

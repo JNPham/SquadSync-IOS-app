@@ -52,6 +52,7 @@ export default function GroupCreation({ route, navigation }) {
         findUserName(userId);
     }, [])
 
+    //Change boolean value of the competition variable when toggle the switch
     const toggleSwitch = () => setCompetition(previousState => !previousState);
 
     //Function called when "Save" is clicked. It checks to make sure the group name, admin, and member limit 
@@ -109,6 +110,7 @@ export default function GroupCreation({ route, navigation }) {
         }
     };
 
+    // Function used to upload the group's image into firebase storage
     const uploadImage = async (groupID) => {
         const blob = await new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
