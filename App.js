@@ -7,6 +7,7 @@ import SignUp from "./Screens/SignUp";
 import Login from "./Screens/Login";
 import { TabNavigation } from './Screens/StackScreen/TabNavigation';
 import { GroupNavigation } from './Screens/StackScreen/GroupScreens/GroupNavigation';
+import {GroupSettingsNavigation} from './Screens/StackScreen/GroupScreens/GroupSettings/GroupSettingsNavigation';
 
 const Stack = createStackNavigator();
 
@@ -18,6 +19,7 @@ export default function App() {
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="TabNavigation" component={TabNavigation} />
         <Stack.Screen name="GroupNavigation" component={GroupNavigation} />
+        <Stack.Screen name="GroupSettingsNavigation" component={GroupSettingsNavigation}/>
       </Stack.Navigator>
     </NavigationContainer>
   )

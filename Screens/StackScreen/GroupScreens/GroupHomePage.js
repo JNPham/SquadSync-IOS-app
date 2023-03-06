@@ -31,7 +31,7 @@ export default function GroupHomePage({ navigation }) {
             <View style = {styles.header}>
                 <Text style = {styles.text}>Shoe Club</Text>
                 <TouchableOpacity style={{ position: 'absolute', right: '5%', top: '5%' }}
-                onPress={() => navigation.navigate('GroupNavigation', { screen: 'GroupSettingPage' })}>
+                onPress={() => navigation.navigate('GroupSettingsNavigation', { screen: 'GroupSettingPage' })}>
                     <Ionicons name="ios-settings" size={45} color="white" />
                 </TouchableOpacity>
             </View>
