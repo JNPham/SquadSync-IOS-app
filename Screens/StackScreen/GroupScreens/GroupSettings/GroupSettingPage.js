@@ -10,35 +10,14 @@ import { ref as sRef } from 'firebase/storage';
 import { Ionicons } from "@expo/vector-icons";
 import { getAuth } from '@firebase/auth';
 
-export default function GroupSettingPage({ route, navigation }) {
+export default function GroupSettingPage({route, navigation}) {
 
     return(
-        <SafeAreaView style = {styles.container}>
-                <View style = {styles.header}>
-                <Text style = {styles.text}>This is group settings page</Text>
-                </View>
-        </SafeAreaView>
-    );
+        <Text>Hello there</Text>
+    )
 }
 
 const styles = StyleSheet.create({
-    header: {
-        flex: 0.75,
-        backgroundColor: '#23272D',
-        marginLeft: '5%',
-    },
-    text: {
-        top: '5%',
-        fontStyle: 'normal',
-        fontSize: 16,
-        fontWeight: '700',
-        lineHeight: 19,
-        height: 25,
-        display: 'flex',
-        letterSpacing: 0.5,
-        color: '#FFFFFF',
-        marginLeft: 60,
-    },
     container: {
         flex: 1,
         backgroundColor: 'white',
@@ -47,5 +26,29 @@ const styles = StyleSheet.create({
         flex: .10,
         backgroundColor: '#23272D',
     },
-
+    text: {
+        fontStyle: 'normal',
+        fontSize: 25,
+        fontWeight: '700',
+        textAlign: 'center',
+        color: 'green',
+        paddingTop: '5%',
+        paddingBottom: '5%',
+    },
+    TextBoxes: { //search bar
+        position: 'absolute',
+        width: '95%',
+        fontSize: 13,
+        alignItems: 'center',
+        padding: 13,
+        backgroundColor: '#D9D9D9',
+        marginVertical: 10,
+        borderRadius: 35,
+    },
+    bottom: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        marginBottom: 10,
+        marginLeft: 13,
+      }
 });

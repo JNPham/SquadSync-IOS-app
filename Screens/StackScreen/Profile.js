@@ -1,18 +1,10 @@
-import { Button, StyleSheet, Text, View, Pressable } from 'react-native';
+import { Button, StyleSheet, Text, View, Pressable,Image, ImageProps, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { getDatabase, ref, set, onValue, push, update, remove } from "firebase/database";
 import { SafeAreaView } from 'react-native';
-import { View } from "react-native";
-import { Avatar } from "./Avatar";
-import { Image, ImageProps, StyleSheet, TouchableOpacity } from "react-native";
-import ImagePicker from "react-native-image-crop-picker";
 
 export default function Profile() {
-
-
-
-
     return (
         <SafeAreaView>
         <View>
