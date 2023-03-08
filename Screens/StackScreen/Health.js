@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Pressable, TextInput, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, Keyboard, View, Button, Pressable, TextInput, Image, TouchableOpacity } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getDatabase, child, ref, set, get} from "firebase/database";
@@ -10,28 +10,38 @@ export default function Health({ navigation }) {
     const userId = getAuth().currentUser.uid;
     const db = getDatabase();
 
-    function saveStepsTaken() {
-        set(ref(db, `users/${userId}/health`), { 
-            stepGoal: stepGoal,         
-            stepsToday: stepToday
-          })
-          alert('Steps Today Saved!')
+    const percentage = stepGoal > 0 ? Math.round((stepToday / stepGoal) * 100) : 0;
+
+
+    function handleSave() {
+      Keyboard.dismiss()
+      set(ref(db, `users/${userId}/health`), { 
+        stepGoal: stepGoal,         
+        stepsToday: stepToday
+      })
+      set(ref(db, `users/${userId}/health`), {          
+        stepGoal: stepGoal,
+        stepsToday: stepToday
+      })
+      alert('Health Data Saved!')
+    }
+    
+    function handleReset() {
+      Keyboard.dismiss()
+      set(ref(db, `users/${userId}/health`), { 
+        stepGoal: 0,         
+        stepsToday: 0
+      })
+      set(ref(db, `users/${userId}/health`), {          
+        stepGoal: 0,
+        stepsToday: 0
+      })
+      setStepGoal(0);
+      setStepToday(0);
+      alert('Health Data Reset!')
     }
 
 
-    function saveStepsGoal() {
-        set(ref(db, `users/${userId}/health`), {          
-            stepGoal: stepGoal,
-            stepsToday: stepToday
-          })
-          
-          if (Number(stepGoal) <= Number(stepsToday)){
-            alert('Step Goal Met Congrats!')
-
-          } else {
-            alert('Step Goal Saved!')
-          }
-    }
 
 
     function getStepGoal(userId) {
@@ -39,7 +49,6 @@ export default function Health({ navigation }) {
         get(child(dbRef, `users/${userId}/health`)).then((snapshot) => {
             if (snapshot.exists()) {
                 var value = snapshot.val().stepGoal;
-                alert('Step Goal found: ' + value)
                 setStepGoal(value);
             } else {
                 console.log("No data available");
@@ -48,55 +57,53 @@ export default function Health({ navigation }) {
             console.error(error);   
         }); 
     }
+
+    function getStepsToday(userId) {
+      const dbRef = ref(getDatabase());
+      get(child(dbRef, `users/${userId}/health`)).then((snapshot) => {
+          if (snapshot.exists()) {
+              var value = snapshot.val().stepsToday;
+              setStepToday(value);
+          } else {
+              console.log("No data available");
+          }
+      }).catch((error) => {
+          console.error(error);   
+      }); 
+  }
     
     useEffect(() => {
         getStepGoal(userId);
+        getStepsToday(userId);
     }, []) 
 
     return (
-      <KeyboardAwareScrollView contentContainerStyle={styles.container}>
-        <View style={styles.container}>
+      <View style={styles.container}>
+        <Text style={styles.label}>Set your daily goal:</Text>
+        <TextInput
+          style={styles.input}
+          keyboardType="numeric"
+          value={stepGoal.toString()}
+          onChangeText={(text) => setStepGoal(parseInt(text) || 0)}
+        />
+        <Text style={styles.label}>Today's steps so far:</Text>
+        <TextInput
+          style={styles.input}
+          keyboardType="numeric"
+          value={stepToday.toString()}
+          onChangeText={(text) => setStepToday(parseInt(text) || 0)}
+        />
+        <Text style={styles.label}>Today's progress:</Text>
+        <Text style={styles.progress}>
+          {stepToday} / {stepGoal}
+        </Text>
+        <Text style={styles.percent}>
+          {percentage}% of goal achieved
+        </Text>
+        <Button title="Save" onPress={handleSave} />
+        <Button title="Reset Data" onPress={handleReset} />
 
-            <Text> Current Step Goal: {stepGoal}</Text>
-            <TextInput value={stepGoal} onChangeText={(stepGoal) => { // enter step numbers 
-                setStepGoal(stepGoal)
-                }
-            } 
-            placeholder='Enter your daily step goal!' style={[styles.TextBoxes]}></TextInput>
-
-            <Pressable>
-              <Text onPress={saveStepsGoal} 
-                    style={{fontWeight: '800',
-                            fontSize: 19,
-                            lineHeight: 19,
-                            display: 'flex',
-                            alignItems: 'center',
-                            textAlign: 'center',
-                            color: '#1D91FC',
-                            letterSpacing: 0.05,}}>Save Goal</Text>
-            </Pressable> 
-
-
-            <Text> Current Steps Taken: {stepToday}</Text>
-            <TextInput value={stepToday} onChangeText={(stepToday) => { // steps taken today
-                setStepToday(stepToday)
-                }
-            } 
-            placeholder='Enter Steps Taken Today' style={[styles.TextBoxes]}></TextInput>
-
-            <Pressable>
-              <Text onPress={saveStepsTaken} 
-                    style={{fontWeight: '800',
-                            fontSize: 19,
-                            lineHeight: 19,
-                            display: 'flex',
-                            alignItems: 'center',
-                            textAlign: 'center',
-                            color: '#1D91FC',
-                            letterSpacing: 0.05,}}>Save Steps</Text>
-            </Pressable> 
-        </View>
-      </KeyboardAwareScrollView>
+      </View>
     );
 }
 
@@ -104,31 +111,27 @@ export default function Health({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000000',
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding: 16,
+    backgroundColor: '#fff',
   },
-  text: {
-    width: 348,
-    height: 42,
-    fontStyle: 'normal',
-    fontWeight: '400',
-    fontSize: 15,
-    lineHeight: 19,
-    display: 'flex',
-    alignItems: 'center',
-    textAlign: 'center',
-    letterSpacing: 0.05,
-    color: '#FFFFFF',
+  label: {
+    fontSize: 18,
+    marginTop: 16,
+    marginBottom: 8,
   },
-  TextBoxes: {
-    width:'90%',
-    fontSize:18,
-    alignItems: 'center',
-    textAlign: 'center',
-    padding:13,
-    backgroundColor: 'white',
-    marginVertical:10,
-    borderRadius: 35,
+  input: {
+    borderWidth: 1,
+    borderRadius: 4,
+    padding: 8,
+    marginBottom: 16,
   },
-}); 
+  progress: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  percent: {
+    fontSize: 24,
+    marginBottom: 16,
+  },
+});

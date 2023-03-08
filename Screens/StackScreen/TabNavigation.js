@@ -55,7 +55,7 @@ export function TabNavigation() {
                                 <MaterialCommunityIcons name="home-circle" size={45} color={focused ? "#B6B5B5" : "black"}/>
                             ),
                         }}/>
-            <Tab.Screen name="Friends" component={Friends} 
+            <Tab.Screen name="Friends" component={Health} 
                         options={{
                             tabBarIcon: ({ focused, color }) => (
                                 <MaterialCommunityIcons name="account-group" size={35} color={focused ? "#B6B5B5" : "black"}/>
