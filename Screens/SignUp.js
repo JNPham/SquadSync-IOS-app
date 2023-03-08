@@ -79,7 +79,10 @@ export default function SignUp({ navigation }) {
 
     //Nhi's work: Front-end of Sign Up page
     return (
-      <KeyboardAwareScrollView contentContainerStyle={styles.container}>
+      <KeyboardAwareScrollView 
+      enableOnAndroid={true}
+      enableAutomaticScroll={(Platform.OS === 'ios')} 
+      contentContainerStyle={styles.container}>
         <View style={styles.container}>
             <Image source={LogoImage} style={styles.logo} />
             <Image source={ConsoleImage} style={{position: 'absolute', width: 170, height: 130, left:'-60%', top:'-2%'}} />

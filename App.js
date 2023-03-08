@@ -3,15 +3,32 @@ import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
+import * as ImagePicker from 'expo-image-picker'
+
 import SignUp from "./Screens/SignUp";
 import Login from "./Screens/Login";
 import { TabNavigation } from './Screens/StackScreen/TabNavigation';
 import { GroupNavigation } from './Screens/StackScreen/GroupScreens/GroupNavigation';
 import {GroupSettingsNavigation} from './Screens/StackScreen/GroupScreens/GroupSettings/GroupSettingsNavigation';
+import { async } from '@firebase/util';
 
 const Stack = createStackNavigator();
 
 export default function App() {
+
+  const pickImageAsync = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if(!result.canceled){
+      console.log(result)
+    }else{
+      alert('You did not select an image.');
+    };
+  }
+
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Login"> 
