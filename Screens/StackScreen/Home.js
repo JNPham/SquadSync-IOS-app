@@ -133,7 +133,7 @@ export default function Home({ navigation }) {
                 ></TextInput>
                 <TouchableOpacity>
                     <Text style={{
-                        color: 'white', fontSize: '14', fontWeight: '600',
+                        color: 'white', fontSize: 14, fontWeight: '600',
                         position: 'absolute', top:65, left: '17%',
                         textDecorationLine: 'underline'
                     }}>Explore our public groups here!</Text>
