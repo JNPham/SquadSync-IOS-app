@@ -72,7 +72,8 @@ export default function Home({ navigation }) {
         let urlGroup = item.url;
         return (
             <View style={{alignItems:'center', paddingTop:'2%', paddingLeft: '2%', paddingRight: '2%'}}>
-                <TouchableOpacity style={{alignItems:'center'}}>
+                <TouchableOpacity style={{alignItems:'center'}} 
+                                onPress={() => navigation.navigate('GroupNavigation', { screen: 'GroupHomePage', params: { groupID: item.id }, })}>
                     <Image
                         source={{ uri: urlGroup }}
                         style={{ width: 160, height: 140, borderRadius: 60 / 2}}
