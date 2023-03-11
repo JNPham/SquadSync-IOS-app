@@ -8,6 +8,7 @@ import { Avatar } from 'react-native-elements';
 import { getAuth } from '@firebase/auth';
 import { getStorage, getDownloadURL } from "firebase/storage";
 import { ref as sRef } from 'firebase/storage';
+import GroupHomePage from './GroupScreens/GroupChat';
 
 export default function Home({ navigation }) {
     const db = getDatabase();
@@ -72,7 +73,9 @@ export default function Home({ navigation }) {
         let urlGroup = item.url;
         return (
             <View style={{alignItems:'center', paddingTop:'2%', paddingLeft: '2%', paddingRight: '2%'}}>
-                <TouchableOpacity style={{alignItems:'center'}}>
+                <TouchableOpacity style={{alignItems:'center'}} 
+                                onPress={() => navigation.navigate('GroupNavigation', { screen: 'GroupTab', 
+                                                                                        params: { groupID: item.id}})}>
                     <Image
                         source={{ uri: urlGroup }}
                         style={{ width: 160, height: 140, borderRadius: 60 / 2}}
