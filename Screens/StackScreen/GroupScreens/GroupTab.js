@@ -1,3 +1,8 @@
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import GroupHomePage from './GroupChat';
+import ActivityTracking from './ActivityTracking';
+import GroupSettingPage from './GroupSettingPage';
+
 import { StyleSheet, View, Text, TextInput, Image, Button, SafeAreaView, KeyboardAvoidingView } from 'react-native';
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
@@ -10,7 +15,9 @@ import { ref as sRef } from 'firebase/storage';
 import { Ionicons } from "@expo/vector-icons";
 import { getAuth } from '@firebase/auth';
 
-export default function GroupHomePage({route, navigation }) {
+const Tab = createMaterialTopTabNavigator();
+
+export function GroupTab({route, navigation}) {
     const defaultGroupPic = 'https://miro.medium.com/max/720/1*W35QUSvGpcLuxPo3SRTH4w.png';
     const db = getDatabase();
 
@@ -50,32 +57,43 @@ export default function GroupHomePage({route, navigation }) {
         findGroup(groupID);
     }, [])
 
-    return(
-        <View
-            style={styles.container}
-            behavior="padding">
-            <SafeAreaView style = {styles.header}>
-                <TouchableOpacity style={{position:'absolute', right:'4%', top:'30%'}}
+    return (
+        <View style={styles.container}>
+            <SafeAreaView style={styles.header}>
+                <TouchableOpacity style={{ position: 'absolute', right: '4%', top: '40%' }}
                     onPress={() => navigation.navigate('GroupNavigation', { screen: 'GroupSettingPage' })}>
                     <Ionicons name="ios-settings" size={38} color="white" />
                 </TouchableOpacity>
                 <Image
                     source={{ uri: image }}
-                    style={{ width: 100, height: 100, borderRadius: 100 / 2, borderWidth: 3 }}
+                    style={{ width: 80, height: 80, borderRadius: 80 / 2, borderWidth: 2.5 }}
                 />
                 <View style={{ paddingLeft: '2%' }}>
                     <Text style={styles.title}>{groupName}</Text>
                     <Text style={styles.text}>Limit: {memberLimit} members</Text>
                 </View>
             </SafeAreaView>
-            <KeyboardAvoidingView style = {styles.body}>
-                <TextInput
-                    style={styles.TextBoxes}
-                    keyboardType="ascii-capable"
-                    />
-            </KeyboardAvoidingView>
+            
+            <View style={styles.body}>
+                <Tab.Navigator screenOptions={{ tabBarStyle: {
+                                                borderBottomLeftRadius: 10,
+                                                borderBottomRightRadius: 10,
+                                                backgroundColor: '#FFEBCE',
+                                                overflow:'hidden'
+                                            },
+                                            tabBarLabelStyle: {
+                                                fontSize: 14,
+                                                fontWeight: '600',
+                                            },
+                                            tabBarActiveTintColor: 'black',
+                                            tabBarInactiveTintColor: '#B6B5B5',
+                                            }}>
+                    <Tab.Screen name="Chat" component={GroupHomePage} />
+                    <Tab.Screen name="Activity" component={ActivityTracking} />
+                </Tab.Navigator>
+            </View>
         </View>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
@@ -84,7 +102,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#F8C272',
     },
     header: {
-        flex: .75,
+        flex: .45,
         backgroundColor: '#F8C272',
         alignItems: 'center',
         flexDirection:'row', 
@@ -106,18 +124,9 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: 'black',
     },
-    TextBoxes: {
-        width: '95%',
-        fontSize: 13,
-        alignItems: 'center',
-        padding: 13,
-        backgroundColor: '#D9D9D9',
-        marginVertical: 10,
-        borderRadius: 35,
-    },
     body: {
         flex: 3,
         justifyContent: 'center',
         backgroundColor: 'white',
-      }
+    },
 });
