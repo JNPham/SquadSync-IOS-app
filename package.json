@@ -9,6 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo/ngrok": "^4.1.0",
     "@react-navigation/bottom-tabs": "^6.5.4",
     "@react-navigation/material-top-tabs": "^6.6.2",
     "@react-navigation/native": "^6.1.0",
@@ -22,6 +23,7 @@
     "react": "18.1.0",
     "react-native": "0.70.5",
     "react-native-elements": "^3.4.2",
+    "react-native-event-listeners": "^1.0.7",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-keyboard-aware-scrollview": "^2.1.0"
   },
