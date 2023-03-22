@@ -1,5 +1,5 @@
 import { StyleSheet, Text, FlatList, Image, View, ScrollView, SafeAreaView, TouchableOpacity, TextInput, ActivityIndicator, Pressable } from 'react-native';
-import React from 'react';
+import React, {useContext} from 'react';
 import { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { getDatabase, child, ref, set, get, onValue } from "firebase/database";
@@ -7,10 +7,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { Avatar } from 'react-native-elements';
 import { getAuth } from '@firebase/auth';
 import { getStorage, getDownloadURL } from "firebase/storage";
-import { ref as sRef } from 'firebase/storage';
-import GroupHomePage from './GroupScreens/GroupChat';
+import themeContext from '../../theme/themeContext';
 
 export default function Home({ navigation }) {
+    const theme = useContext(themeContext);
     const db = getDatabase();
     const storage = getStorage();
     const groupLimit = 20;
@@ -73,14 +73,12 @@ export default function Home({ navigation }) {
         let urlGroup = item.url;
         return (
             <View style={{alignItems:'center', paddingTop:'2%', paddingLeft: '2%', paddingRight: '2%'}}>
-                <TouchableOpacity style={{alignItems:'center'}} 
-                                onPress={() => navigation.navigate('GroupNavigation', { screen: 'GroupTab', 
-                                                                                        params: { groupID: item.id}})}>
+                <TouchableOpacity style={{alignItems:'center'}}>
                     <Image
                         source={{ uri: urlGroup }}
                         style={{ width: 160, height: 140, borderRadius: 60 / 2}}
                     />
-                    <Text style={{fontWeight: '600', paddingTop: '1.5%'}}>{item.name}</Text>
+                    <Text style={[{fontWeight: '600', paddingTop: '1.5%', color:theme.color}]}>{item.name}</Text>
                 </TouchableOpacity>
             </View>
         );
@@ -88,8 +86,8 @@ export default function Home({ navigation }) {
 
     function showGroups() {
         return (
-            <View style={[styles.content]}>
-                <Text style={styles.groupNumber}>Your Groups: {groupList.length}/{groupLimit}</Text>
+            <View style={[styles.content, {backgroundColor:theme.background}]}>
+                <Text style={[styles.groupNumber, {color: theme.color}]}>Your Groups: {groupList.length}/{groupLimit}</Text>
                 <FlatList
                     style={styles.groupDisplay}
                     data={groupList}
@@ -111,7 +109,7 @@ export default function Home({ navigation }) {
 
     //Home page front-end
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={[styles.container, {backgroundColor:theme.background}]}>
             <View style={styles.header}>
                 <Text style={styles.text}>Hello {userName}!</Text>
                 <Text style={styles.text}>How are you doing today?</Text>
@@ -136,18 +134,19 @@ export default function Home({ navigation }) {
                 ></TextInput>
                 <TouchableOpacity>
                     <Text style={{
-                        color: 'white', fontSize: 14, fontWeight: '600',
+                        fontSize: '14', fontWeight: '600',
                         position: 'absolute', top:65, left: '17%',
                         textDecorationLine: 'underline'
                     }}>Explore our public groups here!</Text>
                 </TouchableOpacity>
             </View>
-            <View style={styles.content}>
-                <View>
+            
+            <View style={[{backgroundColor:theme.background}, styles.content]}>
+                <View style={{backgroundColor:theme.background}}>
                     {/* {isLoading ? <ActivityIndicator size="large" /> : showGroups()} */}
                     {showGroups()}
                 </View>
-                <TouchableOpacity style={{ position: 'absolute', left: '43.5%', bottom: '9%' }}
+                <TouchableOpacity style={{ position: 'absolute', left: '43.5%', bottom: '9%', backgroundColor:theme.background}}
                     onPress={() => navigation.navigate('GroupNavigation', { screen: 'GroupCreation' })}>
                     <Ionicons name="add-circle" size={50} color="#E57A7A" />
                 </TouchableOpacity>
@@ -177,13 +176,13 @@ const styles = StyleSheet.create({
     header: {
         flex: 0.75,
         backgroundColor: '#23272D',
-        marginLeft: '5%',
+
     },
     content: {
         flex: 3,
-        backgroundColor: 'white',
+        color: 'white',
         alignItems: 'center',
-        //justifyContent: 'center',
+
     },
     TextBoxes: { //search bar
         position: 'absolute',
@@ -211,4 +210,3 @@ const styles = StyleSheet.create({
         flexGrow: 0
     }
 });
-
