@@ -25,7 +25,9 @@
     "react-native-elements": "^3.4.2",
     "react-native-event-listeners": "^1.0.7",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
-    "react-native-keyboard-aware-scrollview": "^2.1.0"
+    "react-native-keyboard-aware-scrollview": "^2.1.0",
+    "expo-notifications": "~0.17.0",
+    "@react-native-async-storage/async-storage": "~1.17.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

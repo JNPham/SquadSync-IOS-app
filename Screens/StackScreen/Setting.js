@@ -8,6 +8,7 @@ import {EventRegister} from 'react-native-event-listeners'
 import themeContext from '../../theme/themeContext';
 
 export default function Setting({navigation}) {
+    // darkmode 
     const theme = useContext(themeContext);
 
     const [isEnabled, setIsEnabled] = useState(false);
