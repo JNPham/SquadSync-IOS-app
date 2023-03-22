@@ -48,20 +48,4 @@ export default function App() {
   );
 }
 
-  
-
-// export default function App() {
-//   return (
-//     <NavigationContainer>
-//       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Login"> 
-//         <Stack.Screen name="Login" component={Login} />
-//         <Stack.Screen name="SignUp" component={SignUp} />
-//         <Stack.Screen name="TabNavigation" component={TabNavigation} />
-//         <Stack.Screen name="GroupNavigation" component={GroupNavigation} />
-//         <Stack.Screen name='PrivacySecurity' component={PrivacySecurity} />
-//         <Stack.Screen name='HelpCenter' component={HelpCenter} />
-//         <Stack.Screen name='AboutUs' component={AboutUs} />
-//       </Stack.Navigator>
-//     </NavigationContainer>
-//   )
-// } 
+   
