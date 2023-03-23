@@ -1,31 +1,23 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { Image } from 'react-native-elements';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native';
 import { Avatar, Button } from 'react-native-elements';
 import { BottomTabBarHeightCallbackContext } from '@react-navigation/bottom-tabs';
 
 export default function Profile() {
-    const [image, setImage]=useState(null);
+    const defaultProfilePic = 'https://miro.medium.com/max/720/1*W35QUSvGpcLuxPo3SRTH4w.png';
 
-    const pickImage = async () =>{
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Image,
-            quality: 1,
-            allowsEditing: true
-        });
 
-        if(!result.cancelled){
-            setImage(result.uri)}
-        else{
-            //set image to default}
-    }
-}
     return (
-            <View style={styles.container}> 
-                <Image source={{uri:image}} style ={{flex:1, width:600}}/>
-                <Button title="Pick Image" onPress={pickImage}/>
-                <Text>hello</Text>
+        <SafeAreaView style={styles.container}>
+            <View style={styles.content}> 
+                <Image
+                    source={{uri:defaultProfilePic}}
+                    style={{ width: 200, height: 200, borderRadius: 200 / 2, borderWidth: 4, marginTop: 60 }}
+                />
             </View>
+        </SafeAreaView>
 
 
     );
@@ -36,9 +28,10 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#23272D',
     },
-    text:{
-        color: blue,
-        justifyContent: center,
+    content: 
+    {
+        backgroundColor: 'white',
+        flex: 1,
+        alignItems:'center',
     }
-
 }); 

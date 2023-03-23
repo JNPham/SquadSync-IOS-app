@@ -117,11 +117,12 @@ export default function Home({ navigation }) {
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.text}>Hello {userName}!</Text>
-                <Text style={styles.text}>sup foo?</Text>
+                <Text style={styles.text}>How are you doing today?</Text>
                 <TouchableOpacity onPress={() => navigation.navigate('Notification')}
                     style={{ position: 'absolute', right: '5%', top: '5%' }}>
                     <Ionicons name="notifications-circle" size={45} color="#D9D9D9" />
                 </TouchableOpacity>
+               
 
 
                 
