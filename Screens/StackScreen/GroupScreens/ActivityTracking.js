@@ -1,5 +1,5 @@
 import { StyleSheet, View, Text, TextInput, Switch, Image, Button, SafeAreaView, ScrollView, KeyboardAvoidingView } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffec, useContext } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { getDatabase, child, ref, set, get, push } from "firebase/database";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
@@ -8,7 +8,7 @@ import { getStorage, uploadBytesResumable, uploadBytes, getDownloadURL } from "f
 import { ref as sRef } from 'firebase/storage';
 import { Ionicons } from "@expo/vector-icons";
 import { getAuth } from '@firebase/auth';
-import themeContext from '../../theme/themeContext';
+import themeContext from '../../../theme/themeContext';
 
 export default function GroupSettingPage({route, navigation}) {
     const theme = useContext(themeContext);
