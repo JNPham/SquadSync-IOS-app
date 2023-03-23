@@ -72,15 +72,14 @@ export default function Home({ navigation }) {
         let urlGroup = item.url;
         return (
             <View style={{alignItems:'center', paddingTop:'2%', paddingLeft: '2%', paddingRight: '2%'}}>
-                <TouchableOpacity style={{alignItems:'center'}}>
+                <TouchableOpacity  onPress={() => navigation.navigate('GroupNavigation', { screen: 'GroupHomePage' })} style={{alignItems:'center'}}>
                     <Image
                         source={{ uri: urlGroup }}
                         style={{ width: 160, height: 140, borderRadius: 60 / 2}}
-                        onPress={() => navigation.navigate('GroupNavigation', { screen: 'GroupHomePage' })}
                     />
                     <Text 
                     style={{fontWeight: '600', paddingTop: '1.5%'}}
-                    onPress={() => navigation.navigate('GroupNavigation', { screen: 'GroupHomePage' })}>
+                   >
                     {item.name}
                     </Text>
                 </TouchableOpacity>
@@ -118,7 +117,7 @@ export default function Home({ navigation }) {
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.text}>Hello {userName}!</Text>
-                <Text style={styles.text}>How are you doing today?</Text>
+                <Text style={styles.text}>sup foo?</Text>
                 <TouchableOpacity onPress={() => navigation.navigate('Notification')}
                     style={{ position: 'absolute', right: '5%', top: '5%' }}>
                     <Ionicons name="notifications-circle" size={45} color="#D9D9D9" />
