@@ -1,5 +1,5 @@
 import { StyleSheet, View, Text, TextInput, Switch, Image, Button, SafeAreaView, ScrollView, KeyboardAvoidingView, FlatList } from 'react-native';
-import React, { useState, useEffect, useContext } from 'react';
+import React, {useState, useEffect, useContext } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { getDatabase, child, ref, set, get, push } from "firebase/database";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
@@ -11,17 +11,44 @@ import { getAuth } from '@firebase/auth';
 import themeContext from '../../../theme/themeContext';
 import { color } from 'react-native-elements/dist/helpers';
 
+const items = [];
+function getDataAndFormat(items) {
+    const db = getDatabase();
+    const dbRef = ref(db);
+    get(child(dbRef, `users`)).then((snapshot) => {
+    
+        snapshot.forEach((child) => {
+            child.forEach((grandchild) => {
+                let healthVal = grandchild.val().stepsToday;
+                if (healthVal != undefined){
+                    items.push({
+                        name: child.val().fullname,
+                        avatar: require('../../../assets/pfp.jpeg'),
+                        score: healthVal
+                    });
+                }
+            }); 
+                
+    });
+    console.log(items);
+    console.log("");
+    console.log("arrdata");
+    console.log(posts)
+    });
+}
+
+getDataAndFormat(items)
+
+    
 export default function GroupSettingPage({ navigation })  {
+    const db = getDatabase();
     const theme = useContext(themeContext);
-    // useEffect((posts) => {
-    //     getDataAndFormat();
-    // }, [posts]);
+    
+    const userId = getAuth().currentUser.uid;
 
-    function getDataAndFormat() {
-
-    }
 
     renderPost = post => {
+        
         return (
             <View style={styles.feedItem}>
                 <Image source={post.avatar} style={styles.avatar}/>
@@ -37,9 +64,10 @@ export default function GroupSettingPage({ navigation })  {
 
     return (
         <View style={[styles.container, {backgroundColor: theme.background}]}>
+            
             <FlatList 
              style={styles.feed}
-             data={posts}
+             data={items}
              renderItem={({item}) => renderPost(item)}
              keyExtractor={item => item.id}
              showsVerticalScrollIndicator = {false}
@@ -106,7 +134,7 @@ const styles = StyleSheet.create({
     }
 });
 
-posts = [
+const posts = [
     {
         id: 1,
         name: "Han Pham",
@@ -115,8 +143,18 @@ posts = [
     },
     {
         id: 2,
-        name: "Han Pham",
+        name: "Another Person",
         score: 8000,
         avatar: require('../../../assets/pfp.jpeg'),
     },
 ];
+// posts = [];
+
+
+
+
+
+
+
+
+
