@@ -11,7 +11,9 @@ import { getAuth } from '@firebase/auth';
 import themeContext from '../../../theme/themeContext';
 import { color } from 'react-native-elements/dist/helpers';
 
-const items = [];
+items = [];
+sortedItems = []; 
+
 function getDataAndFormat(items) {
     const db = getDatabase();
     const dbRef = ref(db);
@@ -32,12 +34,22 @@ function getDataAndFormat(items) {
     });
     console.log(items);
     console.log("");
-    console.log("arrdata");
-    console.log(posts)
-    });
-}
+    console.log("sorting now");
+    console.log("");
+    console.log("new items");
+    sortedItems = sortObj(items);
+    console.log(sortedItems);
 
-getDataAndFormat(items)
+    });
+
+};
+
+
+    function sortObj(items){
+        return Object.values( items ).sort( (a, b) => b.score - a.score );
+    };
+  
+getDataAndFormat(items);
 
     
 export default function GroupSettingPage({ navigation })  {
@@ -61,13 +73,12 @@ export default function GroupSettingPage({ navigation })  {
         );
     };
 
-
     return (
         <View style={[styles.container, {backgroundColor: theme.background}]}>
             
             <FlatList 
              style={styles.feed}
-             data={items}
+             data={sortedItems}
              renderItem={({item}) => renderPost(item)}
              keyExtractor={item => item.id}
              showsVerticalScrollIndicator = {false}
@@ -77,7 +88,6 @@ export default function GroupSettingPage({ navigation })  {
 
 }
 const styles = StyleSheet.create({
-
     container: {
         flex: 1,
         backgroundColor: '#DCDCDD',
@@ -134,21 +144,9 @@ const styles = StyleSheet.create({
     }
 });
 
-const posts = [
-    {
-        id: 1,
-        name: "Han Pham",
-        score: 10000,
-        avatar: require('../../../assets/pfp.jpeg'),
-    },
-    {
-        id: 2,
-        name: "Another Person",
-        score: 8000,
-        avatar: require('../../../assets/pfp.jpeg'),
-    },
-];
-// posts = [];
+
+
+
 
 
 
