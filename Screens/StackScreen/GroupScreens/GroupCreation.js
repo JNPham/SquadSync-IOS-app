@@ -85,7 +85,17 @@ export default function GroupCreation({ route, navigation }) {
                 groupURL: url,
                 groupName: groupName,
             });
-
+            set(ref(db, '/groups/' + newGroup.key + '/chat/'), {          
+                1: "SquadSync*Start of your new chat!"
+            });
+            //Add image url to group
+            set(ref(db, '/groups/' + newGroup.key + '/images/imgDictionary'), {          
+                1: ""
+            });
+            //Add video url to group
+            set(ref(db, '/groups/' + newGroup.key + '/video/vidDictionary'), {          
+                1: ""
+            });
             alert('Your group has been successfully created!');
             navigation.navigate('TabNavigation', { screen: 'Home' });
         } else {
