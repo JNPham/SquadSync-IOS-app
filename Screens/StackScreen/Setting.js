@@ -1,12 +1,18 @@
-import { Image, StyleSheet, Text, View, SafeAreaView, Switch, TouchableOpacity } from 'react-native';
-import React from 'react';
-import { useState, useEffect } from 'react';
+import { Image, StyleSheet, Text, View, SafeAreaView, Switch, TouchableOpacity, Pressable } from 'react-native';
+import React, { useState, useEffect, useContext }  from 'react';
 import { getDatabase, ref, update, get, child, remove } from "firebase/database";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { getAuth } from '@firebase/auth';
+import { StatusBar } from 'expo-status-bar';
+import {EventRegister} from 'react-native-event-listeners'
+import themeContext from '../../theme/themeContext';
 
 export default function Setting({navigation}) {
-    const [darkMode, setDarkMode] = useState(false);
+    // darkmode 
+    const theme = useContext(themeContext);
+
+    const [isEnabled, setIsEnabled] = useState(false);
+    const [darkMode, setDarkMode, darkmodeInDB, setDarkModeInDB] = useState(false);
     const LogoImage = require('../../assets/squadsync.png');
     
     const db = getDatabase();
@@ -18,7 +24,7 @@ export default function Setting({navigation}) {
         get(child(dbRef, `users/${userId}`)).then((snapshot) => {
             if (snapshot.exists()) {
                 var value = snapshot.val().darkmode;
-                setDarkMode(value);
+                setDarkModeInDB(value);
             } else {
                 console.log("No data available");
             }
@@ -27,9 +33,9 @@ export default function Setting({navigation}) {
 
     // Change boolean value of the darkmode variable when toggle the switch, then save its value to database
     const toggleSwitch = () => {
-        setDarkMode(previousState => !previousState);
+        setDarkModeInDB(previousState => !previousState);
         update(ref(db, 'users/' + userId), {
-            darkmode: !darkMode
+            darkmodeInDB: !darkMode
         });
     }
 
@@ -38,53 +44,61 @@ export default function Setting({navigation}) {
             <View style={styles.header}>
                 <Text style={styles.title}>Settings</Text>
             </View>
-            <View style={styles.body}>
-                <View style={{ flexDirection: "row", justifyContent:'space-between', paddingTop: '5%' }}>
+           
+            <View style={[styles.body, {backgroundColor: theme.background}]}>
+                <View style={{ flexDirection: "row", justifyContent:'space-between', paddingTop: '5%', color:theme.color}}>
                     <View style={{ flexDirection: "row", alignItems:'center'}}>
-                        <MaterialCommunityIcons name="theme-light-dark" size={35} color="black" />
-                        <Text style={[styles.text]}>Dark Mode</Text>
+                        <MaterialCommunityIcons name="theme-light-dark" size={35} color="black" style={{color:theme.color}}/>
+                        <Text style={[styles.text, {color:theme.color}]}>Dark Mode</Text>
                     </View>
                     <Switch
-                        trackColor={{ false: '#767577', true: '#B5D0FF' }}
-                        thumbColor={darkMode ? '#F8C272' : '#f4f3f4'}
+                        trackColor={{false: '#767577', true: '#81b0ff'}}
+                        thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
                         ios_backgroundColor="#3e3e3e"
-                        onValueChange={toggleSwitch}
+                        // onValueChange={toggleSwitch}
                         value={darkMode}
-                        checked={!!darkMode}
+                        checked={!!darkmodeInDB}
+                        onValueChange={(value) => {
+                            // toggleSwitch();
+                            setDarkMode(value);
+                            EventRegister.emit('ChangeTheme', value)
+                        }}
                     />
                 </View>
-                <View style={{ backgroundColor: "#B9B9B9", height: 1.5, marginTop: '5%' }} />
+      
+                <View style={[styles.hortizontalLine, {borderColor: theme.borderColor}]} />
                 
-                <TouchableOpacity style={{ flexDirection: "row", justifyContent:'space-between', paddingTop: '5%' }}
+                <TouchableOpacity style={styles.buttons}
                                 onPress={() => navigation.navigate('PrivacySecurity')}>
                     <View style={{ flexDirection: "row", alignItems:'center'}}>
-                        <MaterialCommunityIcons name="lock" size={35} color="black" />
-                        <Text style={[styles.text]}>Privacy & Security</Text>
+                        <MaterialCommunityIcons name="lock" size={35} color="black" style={{color:theme.color}}/>
+                        <Text style={[styles.text, {color:theme.color}]}>Privacy & Security</Text>
                     </View>
-                    <MaterialCommunityIcons name="chevron-right" size={35} color="black" />
+                    <MaterialCommunityIcons name="chevron-right" size={35} color="black" style={{color:theme.color}}/>
                 </TouchableOpacity>
-                <View style={{ backgroundColor: "#B9B9B9", height: 1.5, marginTop: '5%' }} />
+                <View style={[styles.hortizontalLine, {borderColor: theme.borderColor}]} />
                 
-                <TouchableOpacity style={{ flexDirection: "row", justifyContent:'space-between', paddingTop: '5%' }}
+                <TouchableOpacity style={styles.buttons}
                                 onPress={() => navigation.navigate('HelpCenter')}>
                     <View style={{ flexDirection: "row", alignItems:'center'}}>
-                        <MaterialCommunityIcons name="headphones" size={35} color="black" />
-                        <Text style={[styles.text]}>Help Center</Text>
+                        <MaterialCommunityIcons name="headphones" size={35} color="black" style={{color:theme.color}}/>
+                        <Text style={[styles.text, {color:theme.color}]}>Help Center</Text>
                     </View>
-                    <MaterialCommunityIcons name="chevron-right" size={35} color="black" />
+                    <MaterialCommunityIcons name="chevron-right" size={35} style={{color:theme.color}}/>
                 </TouchableOpacity>
-                <View style={{ backgroundColor: "#B9B9B9", height: 1.5, marginTop: '5%' }} />
+                <View style={[styles.hortizontalLine, {borderColor: theme.borderColor}]} />
 
-                <TouchableOpacity style={{ flexDirection: "row", justifyContent:'space-between', paddingTop: '5%' }}
+                <TouchableOpacity style={styles.buttons}
                                 onPress={() => navigation.navigate('AboutUs')}>
                     <View style={{ flexDirection: "row", alignItems:'center'}}>
                         <Image source={LogoImage} style={{width:35, height: 35}} />
-                        <Text style={[styles.text]}>About Us</Text>
+                        <Text style={[styles.text, {color:theme.color}]}>About Us</Text>
                     </View>
-                    <MaterialCommunityIcons name="chevron-right" size={35} color="black" />
+                    <MaterialCommunityIcons name="chevron-right" size={35} color="black" style={{color:theme.color}}/>
                 </TouchableOpacity>
-                <View style={{ backgroundColor: "#B9B9B9", height: 1.5, marginTop: '5%' }} />
+                <View style={[styles.hortizontalLine, {borderColor: theme.borderColor}]} />
             </View>
+
         </SafeAreaView>
     );
 }
@@ -92,7 +106,8 @@ export default function Setting({navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#23272D',
+    },
+    chevronRight: {
     },
     header: {
         flex: 0.4,
@@ -102,10 +117,10 @@ const styles = StyleSheet.create({
     },
     body: {
         flex: 3,
-        backgroundColor: 'white',
         paddingLeft: '5%',
-        paddingRight: '5%'
-        //alignItems: 'stretch',
+        paddingRight: '5%',
+        backgroundColor: "white"
+
     },
     title: {
         fontSize: 25,
@@ -115,7 +130,17 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 18,
         fontWeight: '700',
-        color: 'black',
+        // color: 'black',
         paddingLeft: '3%'
+    },
+    hortizontalLine: {
+        marginTop: '5%',
+        borderWidth: 1,
+        borderColor: "#B9B9B9",   
+    }, 
+    buttons: {
+        flexDirection: "row",
+        justifyContent:'space-between',
+        paddingTop: '5%',
     }
 }); 

@@ -2,9 +2,13 @@ import { StyleSheet, Text, Keyboard, View, Button, Pressable, TextInput, Image, 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getDatabase, child, ref, set, get} from "firebase/database";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import themeContext from '../../theme/themeContext';
 
 export default function Health({ navigation }) {
+    // Darkmode theme called here 
+    const theme = useContext(themeContext);
+
     const [stepGoal, setStepGoal] = useState('');
     const [stepToday, setStepToday] = useState('');
     const userId = getAuth().currentUser.uid;
@@ -78,26 +82,26 @@ export default function Health({ navigation }) {
     }, []) 
 
     return (
-      <View style={styles.container}>
-        <Text style={styles.label}>Set your daily goal:</Text>
+      <View style={[styles.container, {backgroundColor: theme.background}]}>
+        <Text style={[styles.label, {color: theme.color}]}>Set your daily goal:</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input,  {color: theme.color}]}
           keyboardType="numeric"
           value={stepGoal.toString()}
           onChangeText={(text) => setStepGoal(parseInt(text) || 0)}
         />
-        <Text style={styles.label}>Today's steps so far:</Text>
+        <Text style={[styles.label, {color: theme.color}]}>Today's steps so far:</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input,  {color: theme.color}]}
           keyboardType="numeric"
           value={stepToday.toString()}
           onChangeText={(text) => setStepToday(parseInt(text) || 0)}
         />
-        <Text style={styles.label}>Today's progress:</Text>
-        <Text style={styles.progress}>
+        <Text style={[styles.label, {color: theme.color}]}>Today's progress:</Text>
+        <Text style={[styles.progress, {color: theme.color}]}>
           {stepToday} / {stepGoal}
         </Text>
-        <Text style={styles.percent}>
+        <Text style={[styles.percent, {color:theme.color}]}>
           {percentage}% of goal achieved
         </Text>
         <Button title="Save" onPress={handleSave} />
