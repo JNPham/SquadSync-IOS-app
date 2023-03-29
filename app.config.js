@@ -23,6 +23,7 @@ export default{
       "supportsTablet": true
     },
     "android": {
+      "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "foregroundImage": "./assets/squadsync.png",
         "backgroundColor": "#FFFFFF"
