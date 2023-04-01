@@ -2,8 +2,9 @@ import { StyleSheet, View, Text, TextInput, Image, FlatList, Button, SafeAreaVie
 import React from 'react';
 import { Video } from 'expo-av';
 import { TouchableOpacity } from 'react-native';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useLayoutEffect } from 'react';
 import { getDatabase, child, ref, set, get, push } from "firebase/database";
+import { GiftedChat } from 'react-native-gifted-chat';
 //import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
 import * as ImagePicker from 'expo-image-picker';
 import { getStorage, uploadBytesResumable, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -11,42 +12,23 @@ import { ref as sRef } from 'firebase/storage';
 import { Ionicons } from "@expo/vector-icons";
 import { getAuth } from '@firebase/auth';
 
-export default function GroupHomePage({route, navigation }) {
+export default function GroupChat({route, navigation }) {
     const defaultGroupPic = 'https://miro.medium.com/max/720/1*W35QUSvGpcLuxPo3SRTH4w.png';
     const db = getDatabase();
     const storage = getStorage();
-
-    //const {groupID} = route.params.params;
+    const groupID = route.params.gID; //get group ID passed from Group Tab
+    //Caleb code start
     const [groupName, setGroupName] = useState();
-    const [groupId, setGroupId] = useState();
     const [image, setImage] = useState(defaultGroupPic);
     const [imageAdding, setImageAdding] = useState();
-    const [memberLimit, setMemberLimit] = useState();
-    const [tracking, setTracking] = useState('Music');
-    const [competition, setCompetition] = useState(false); // for UI display
-    const [groupChat, setGroupChat] = useState('');
+    const [messages, setMessages] = useState([]);
     const [imageUrls, setGroupChatImages] = useState();
     const [videoUrls, setGroupChatVideos] = useState();
-
-    // const imageUrls = [
-    //     'https://miro.medium.com/max/720/1*W35QUSvGpcLuxPo3SRTH4w.png',
-    //     'https://miro.medium.com/max/720/1*W35QUSvGpcLuxPo3SRTH4w.png',
-    //     'https://miro.medium.com/max/720/1*W35QUSvGpcLuxPo3SRTH4w.png',
-    //     'https://miro.medium.com/max/720/1*W35QUSvGpcLuxPo3SRTH4w.png'
-    //   ];
-    // const videoUrls = [
-    //     'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-    //     'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-    // ];
-
-
-
     const [selectedVideo, setSelectedVideo] = React.useState(null);
+    
     const handleVideoPress = (videoUrl) => {
         setSelectedVideo(videoUrl);
       };
-
-
 
     //function searchs from firebase using groupID and returns the currently selected group
     function findGroup(groupID) {
@@ -59,24 +41,18 @@ export default function GroupHomePage({route, navigation }) {
                 var gName = snapshot.val().name;
                 console.log(gName);
                 setGroupName(gName);
+                
                 var gImage = snapshot.val().url.groupURL;
                 setImage(gImage);
-                var memLimit = snapshot.val().limit;
-                setMemberLimit(memLimit);
-                var gTracking = snapshot.val().tracking;
-                setTracking(gTracking);
-                var gCompetition = snapshot.val().competitionMode;
-                setCompetition(gCompetition);
 
-
-                var groupChatRaw = snapshot.val().chat;
+                /*var groupChatRaw = snapshot.val().chat;
                 unpackChatData(groupChatRaw);
 
                 var groupChatImages = snapshot.val().images.imgDictionary;
                 unpackGroupImages(groupChatImages);
 
                 var groupChatVideos = snapshot.val().video.vidDictionary;
-                unpackGroupVideos(groupChatVideos);
+                unpackGroupVideos(groupChatVideos); */
 
             } else {
                 console.log("No data available 1111");
@@ -86,7 +62,7 @@ export default function GroupHomePage({route, navigation }) {
         });
     }
 
-    function unpackChatData(rawChatData) {
+    /*function unpackChatData(rawChatData) {
         var messageString = "";
         for (let i = 0; i < rawChatData.length; i++) {
             const message = rawChatData[i];
@@ -96,7 +72,7 @@ export default function GroupHomePage({route, navigation }) {
             }
           }
           setGroupChat(messageString);
-    }
+    } */
 
     function unpackGroupImages(rawImageData) {
         var imgUrls = []; 
@@ -234,39 +210,16 @@ export default function GroupHomePage({route, navigation }) {
 
 
     useEffect(() => {
-        //findGroup(groupID);
-        findGroup("-NRFdT4ZeDQoMIQu8uaj");
-        setGroupId("-NRFdT4ZeDQoMIQu8uaj");
+        findGroup(groupID);
+        //findGroup("-NRFdT4ZeDQoMIQu8uaj");
     }, [])
 
     return(
         <View
             style={styles.container}
             behavior="padding">
-            {/* <SafeAreaView style = {styles.header}>
-                <TouchableOpacity style={{position:'absolute', right:'4%', top:'30%'}}
-                    onPress={() => navigation.navigate('GroupNavigation', { screen: 'GroupSettingPage' })}>
-                    <Ionicons name="ios-settings" size={38} color="white" />
-                </TouchableOpacity>
-                <Image
-                    source={{ uri: image }}
-                    style={{ width: 100, height: 100, borderRadius: 100 / 2, borderWidth: 3 }}
-                />
-                <View style={{ paddingLeft: '2%' }}>
-                    <Text style={styles.title}>Somename</Text>
-                    <Text style={styles.text}>Limit: {memberLimit} members</Text>
-                </View>
-            </SafeAreaView>
-            <KeyboardAvoidingView style = {styles.body}>
-                <TextInput
-                    style={styles.TextBoxes}
-                    keyboardType="ascii-capable"
-                    />
-            </KeyboardAvoidingView> */}
-            <Text>Group Chat Page</Text>
-            <Text>{groupChat}</Text>
             <TouchableOpacity onPress={pickImage} > 
-            <Text>Tap to add Group Image</Text>
+                <Text>Tap to add Group Image</Text>
             </TouchableOpacity>
             <View style={styles.line} />
 
@@ -275,32 +228,38 @@ export default function GroupHomePage({route, navigation }) {
                 numColumns={4}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => (
-            <Image source={{ uri: item }} style={{ width: 80, height: 80, borderRadius: 80 / 2, borderWidth: 1.5 }} />
-                 )}/>
+                    <View style ={{padding: '0.5%'}}>
+                        <Image source={{ uri: item }} style={{ width: 90, height: 90 }} />
+                    </View>
+                 )}
+            />
 
             <TouchableOpacity onPress={pickVideo} > 
-            <Text>Tap to add Group Video</Text>
+                <Text>Tap to add Group Video</Text>
             </TouchableOpacity>
             <View style={styles.line} />
             <FlatList
-            data={videoUrls}
-            numColumns={3}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => handleVideoPress(item)}>
-                <Video
-                source={{ uri: item }}
-                style={{ width: 80, height: 80, borderRadius: 80 / 2, borderWidth: 1.5 }}
-                resizeMode="cover"
-                shouldPlay={item === selectedVideo}
-                />
-            </TouchableOpacity>)}
+                data={videoUrls}
+                numColumns={3}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => (
+                <TouchableOpacity onPress={() => handleVideoPress(item)}>
+                    <View style ={{padding: '0.5%'}}>
+                        <Video
+                            source={{ uri: item }}
+                            style={{ width: 90, height: 90}}
+                            resizeMode="cover"
+                            shouldPlay={item === selectedVideo}
+                        />
+                    </View>
+                </TouchableOpacity>)}
             />
+            <Text>{groupID} Page</Text>
 
         </View>
     )
 }
-
+// Caleb code end
 const styles = StyleSheet.create({
     container: {
         flex: 1,

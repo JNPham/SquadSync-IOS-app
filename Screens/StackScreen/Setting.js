@@ -106,6 +106,7 @@ export default function Setting({navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#23272D',
     },
     chevronRight: {
     },

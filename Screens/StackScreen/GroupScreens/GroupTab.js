@@ -1,17 +1,13 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import GroupHomePage from './GroupChat';
+import GroupChat from './GroupChat';
 import ActivityTracking from './ActivityTracking';
 import GroupSettingPage from './GroupSettingPage';
 
-import { StyleSheet, View, Text, TextInput, Image, Button, SafeAreaView, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, View, Text, Image, SafeAreaView } from 'react-native';
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import { useState, useEffect } from 'react';
-import { getDatabase, child, ref, set, get, push } from "firebase/database";
-//import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
-import * as ImagePicker from 'expo-image-picker';
-import { getStorage, uploadBytesResumable, uploadBytes, getDownloadURL } from "firebase/storage";
-import { ref as sRef } from 'firebase/storage';
+import { getDatabase, child, ref, get} from "firebase/database";
 import { Ionicons } from "@expo/vector-icons";
 import { getAuth } from '@firebase/auth';
 
@@ -32,7 +28,6 @@ export function GroupTab({route, navigation}) {
     function findGroup(groupID) {
         const dbRef = ref(db);
         get(child(dbRef, `groups/${groupID}`)).then((snapshot) => {
-            console.log(groupID);
             if (snapshot.exists()) {
                 var gName = snapshot.val().name;
                 console.log(gName);
@@ -62,7 +57,7 @@ export function GroupTab({route, navigation}) {
             <SafeAreaView style={styles.header}>
                 <TouchableOpacity style={{ position: 'absolute', right: '4%', top: '40%' }}
                     onPress={() => navigation.navigate('GroupNavigation', { screen: 'GroupSettingPage' })}>
-                    <Ionicons name="ios-settings" size={38} color="white" />
+                    <Ionicons name="ios-settings" size={32} color="white" />
                 </TouchableOpacity>
                 <Image
                     source={{ uri: image }}
@@ -88,8 +83,8 @@ export function GroupTab({route, navigation}) {
                                             tabBarActiveTintColor: 'black',
                                             tabBarInactiveTintColor: '#B6B5B5',
                                             }}>
-                    <Tab.Screen name="Chat" component={GroupHomePage} />
-                    <Tab.Screen name="Activity" component={ActivityTracking} />
+                    <Tab.Screen name="Chat" component={GroupChat} initialParams={{gID:groupID}}/>
+                    <Tab.Screen name="Activity" component={ActivityTracking} initialParams={{gID: groupID}}/>
                 </Tab.Navigator>
             </View>
         </View>
