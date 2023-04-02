@@ -45,7 +45,7 @@ function getDataAndFormat(items) {
 };
 
 
-    function sortObj(items){
+function sortObj(items){
         return Object.values( items ).sort( (a, b) => b.score - a.score );
     };
   
