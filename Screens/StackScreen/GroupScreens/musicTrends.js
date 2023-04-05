@@ -26,6 +26,16 @@ export default function MusicTrends({route, navigation}) {
         <ScrollView >
                 <Text style ={styles.text1}> Music Trends</Text>
                 <Text style = {styles.box}>1. {music[0]}</Text>
+                <Text style = {styles.box}>2. {music[1]}</Text>
+                <Text style = {styles.box}>3. {music[2]}</Text>
+                <Text style = {styles.box}>4. {music[3]}</Text>
+                <Text style = {styles.box}>5. {music[4]}</Text>
+                <Text style = {styles.box}>6. {music[5]}</Text>
+                <Text style = {styles.box}>7. {music[6]}</Text>
+                <Text style = {styles.box}>8. {music[7]}</Text>
+                <Text style = {styles.box}>9. {music[8]}</Text>
+                <Text style = {styles.box}>10. {music[9]}</Text>
+
                 
 
         </ScrollView>
@@ -67,6 +77,6 @@ const styles = StyleSheet.create({
       //backgroundColor: '#C1D5C5',
       borderRadius: 10,
       borderWidth: 7,
-      borderColor: '#C1D5C5',
+      borderColor: '#BD756E',
     }
 })
