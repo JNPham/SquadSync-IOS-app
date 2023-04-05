@@ -7,6 +7,7 @@ import {GroupTab} from "./GroupTab";
 import GroupSettingPage from "./GroupSettingPage";
 import locationTrends from "./locationTrends";
 import musicTrends from "./musicTrends";
+import healthTrends from "./healthTrends";
 
 const Stack = createStackNavigator();
 

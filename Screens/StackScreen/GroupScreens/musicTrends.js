@@ -24,17 +24,9 @@ export default function musicTrends({route, navigation}) {
     return(
     <SafeAreaView style={styles.container}>
         <ScrollView >
-                <Text style ={styles.text1}> Location Trends</Text>
-                <Text style = {styles.box}>1. {locations[0]}</Text>
-                <Text style = {styles.box}>2. {locations[1]}</Text>
-                <Text style = {styles.box}>3. {locations[2]}</Text>
-                <Text style = {styles.box}>4. {locations[3]}</Text>
-                <Text style = {styles.box}>5. {locations[4]}</Text>
-                <Text style = {styles.box}>6. {locations[5]}</Text>
-                <Text style = {styles.box}>7. {locations[6]}</Text>
-                <Text style = {styles.box}>8. {locations[7]}</Text>
-                <Text style = {styles.box}>9. {locations[8]}</Text>
-                <Text style = {styles.box}>10. {locations[9]}</Text>
+                <Text style ={styles.text1}> Music Trends</Text>
+                <Text style = {styles.box}>1. {music[0]}</Text>
+                
 
         </ScrollView>
         </SafeAreaView>
