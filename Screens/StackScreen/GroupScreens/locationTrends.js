@@ -19,7 +19,7 @@ import { getAuth } from '@firebase/auth';
 const locations = ['United States', 'Mexico', 'Italy', 'Canada', 'Japan', 'India', 'Brazil', 'Indonesia', 'Turkey', 'United Kingdom', 'Germany']
 const SPACING = 20
 
-export default function locationTrends({route, navigation}) {
+export default function LocationTrends({route, navigation}) {
 
     return(
     <SafeAreaView style={styles.container}>

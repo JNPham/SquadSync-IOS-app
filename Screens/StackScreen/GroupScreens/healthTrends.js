@@ -19,7 +19,7 @@ import { getAuth } from '@firebase/auth';
 const music = ['Indie', 'Pop', 'Rock', 'Country', 'Jazz', 'R&B', 'EDM', 'Hip-Hop/Rap', 'Classical', 'Techno', 'Lo-Fi']
 const SPACING = 20
 
-export default function healthTrends({route, navigation}) {
+export default function HealthTrends({route, navigation}) {
 
     return(
     <SafeAreaView style={styles.container}>

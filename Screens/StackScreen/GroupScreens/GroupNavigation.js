@@ -5,9 +5,10 @@ import GroupCreation from "./GroupCreation";
 import GroupHomePage from "./GroupChat";
 import {GroupTab} from "./GroupTab";
 import GroupSettingPage from "./GroupSettingPage";
-import locationTrends from "./locationTrends";
-import musicTrends from "./musicTrends";
-import healthTrends from "./healthTrends";
+import LocationTrends from "./LocationTrends";
+import MusicTrends from "./MusicTrends";
+import HealthTrends from "./HealthTrends";
+
 
 const Stack = createStackNavigator();
 
@@ -18,9 +19,9 @@ export function GroupNavigation() {
       <Stack.Screen name="GroupCreation" component={GroupCreation} />
       <Stack.Screen name="GroupTab" component={GroupTab} />
       <Stack.Screen name="GroupSettingPage" component={GroupSettingPage} />
-      <Stack.Screen name="locationTrends" component={locationTrends} />
-      <Stack.Screen name="musicTrends" component={musicTrends} />
-      <Stack.Screen name="healthTrends" component={healthTrends} />
+      <Stack.Screen name="LocationTrends" component={LocationTrends} />
+      <Stack.Screen name="MusicTrends" component={MusicTrends} />
+      <Stack.Screen name="HealthTrends" component={HealthTrends} />
     </Stack.Navigator>
   )
 } 
