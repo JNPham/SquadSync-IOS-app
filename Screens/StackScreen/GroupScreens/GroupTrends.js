@@ -49,13 +49,13 @@ export default function GroupTrends({route, navigation}) {
     return(
         <View style={styles.container}>
                 <Text style={styles.text1}>{groupName} Member Trends</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('locationTrends')}>
+            <TouchableOpacity onPress={() => navigation.navigate('LocationTrends')}>
                 <Text style={styles.location}>See where {groupName} members are located right now!</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('musicTrends')} >
+            <TouchableOpacity onPress={() => navigation.navigate('MusicTrends')} >
                 <Text style={styles.music}>See what {groupName} members are listening to right now!</Text>
             </TouchableOpacity >
-            <TouchableOpacity onPress={() => navigation.navigate('healthTrends')}>
+            <TouchableOpacity onPress={() => navigation.navigate('HealthTrends')}>
                 <Text style={styles.health}>See how active {groupName} members right now!</Text>
             </TouchableOpacity>
         </View>
