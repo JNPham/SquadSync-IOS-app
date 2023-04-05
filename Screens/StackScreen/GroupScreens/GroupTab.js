@@ -14,6 +14,7 @@ import { getStorage, uploadBytesResumable, uploadBytes, getDownloadURL } from "f
 import { ref as sRef } from 'firebase/storage';
 import { Ionicons } from "@expo/vector-icons";
 import { getAuth } from '@firebase/auth';
+import GroupTrends from './GroupTrends';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -90,6 +91,7 @@ export function GroupTab({route, navigation}) {
                                             }}>
                     <Tab.Screen name="Chat" component={GroupHomePage} />
                     <Tab.Screen name="Activity" component={ActivityTracking} />
+                    <Tab.Screen name="Trends" component={GroupTrends} />
                 </Tab.Navigator>
             </View>
         </View>
