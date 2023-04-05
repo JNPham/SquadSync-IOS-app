@@ -16,10 +16,10 @@ import { ref as sRef } from 'firebase/storage';
 import { Ionicons } from "@expo/vector-icons";
 import { getAuth } from '@firebase/auth';
 
-const locations = ['United States', 'Mexico', 'Italy', 'Canada', 'Japan', 'India', 'Brazil', 'Indonesia', 'Turkey', 'United Kingdom', 'Germany']
+const music = ['Indie', 'Pop', 'Rock', 'Country', 'Jazz', 'R&B', 'EDM', 'Hip-Hop/Rap', 'Classical', 'Techno', 'Lo-Fi']
 const SPACING = 20
 
-export default function locationTrends({route, navigation}) {
+export default function musicTrends({route, navigation}) {
 
     return(
     <SafeAreaView style={styles.container}>
