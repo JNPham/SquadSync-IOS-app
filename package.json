@@ -1,37 +1,38 @@
 {
-    "name": "squadsync",
-    "version": "1.0.0",
-    "main": "node_modules/expo/AppEntry.js",
-    "scripts": {
-        "start": "expo start",
-        "android": "expo start --android",
-        "ios": "expo start --ios",
-        "web": "expo start --web"
-    },
-    "dependencies": {
-        "@expo/ngrok": "^4.1.0",
-        "@react-native-async-storage/async-storage": "~1.17.3",
-        "@react-navigation/bottom-tabs": "^6.5.4",
-        "@react-navigation/material-top-tabs": "^6.6.2",
-        "@react-navigation/native": "^6.1.0",
-        "@react-navigation/stack": "^6.3.8",
-        "dotenv": "^16.0.3",
-        "expo": "~47.0.8",
-        "expo-av": "^13.2.1",
-        "expo-constants": "~14.0.2",
-        "expo-image-picker": "~14.0.2",
-        "expo-notifications": "~0.17.0",
-        "expo-status-bar": "~1.4.2",
-        "firebase": "^9.14.0",
-        "react": "18.1.0",
-        "react-native": "0.70.5",
-        "react-native-elements": "^3.4.2",
-        "react-native-event-listeners": "^1.0.7",
-        "react-native-keyboard-aware-scroll-view": "^0.9.5",
-        "react-native-keyboard-aware-scrollview": "^2.1.0"
-    },
-    "devDependencies": {
-        "@babel/core": "^7.12.9"
-    },
-    "private": true
+  "name": "squadsync",
+  "version": "1.0.0",
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "@expo/ngrok": "^4.1.0",
+    "@react-native-async-storage/async-storage": "~1.17.3",
+    "@react-navigation/bottom-tabs": "^6.5.4",
+    "@react-navigation/material-top-tabs": "^6.6.2",
+    "@react-navigation/native": "^6.1.0",
+    "@react-navigation/stack": "^6.3.8",
+    "dotenv": "^16.0.3",
+    "expo": "~47.0.8",
+    "expo-av": "~13.0.3",
+    "expo-constants": "~14.0.2",
+    "expo-image-picker": "~14.0.2",
+    "expo-notifications": "~0.17.0",
+    "expo-status-bar": "~1.4.2",
+    "firebase": "^9.14.0",
+    "react": "18.1.0",
+    "react-native": "0.70.5",
+    "react-native-dialog-input": "^1.0.8",
+    "react-native-elements": "^3.4.2",
+    "react-native-event-listeners": "^1.0.7",
+    "react-native-keyboard-aware-scroll-view": "^0.9.5",
+    "react-native-keyboard-aware-scrollview": "^2.1.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.9"
+  },
+  "private": true
 }

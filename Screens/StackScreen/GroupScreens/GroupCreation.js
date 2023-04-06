@@ -148,7 +148,7 @@ export default function GroupCreation({ route, navigation }) {
                     <Text style={[styles.textButton, { position: 'absolute', top: '4%', left: '5%' }]}>Cancel</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={saveGroupData}>
-                    <Text style={[styles.textButton, { position: 'absolute', top: '4%', right: '5%' }]}>Save</Text>
+                    <Text style={[styles.textButton, { position: 'relative', top: '60%', left: '85%' }]}>Save</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={pickImage} style={{ width: 140, height: 140, borderRadius: 140 / 2, top: '5%', left: '33%' }}>
                     <Image
