@@ -9,6 +9,7 @@ import Notification from './Notification';
 import Friends from './Friends';
 import Setting from './Setting';
 import Health from './Health';
+import GroupLeaderboard from './GroupLeaderboard';
 
 const Tab = createBottomTabNavigator();
 
@@ -55,7 +56,7 @@ export function TabNavigation() {
                                 <MaterialCommunityIcons name="home-circle" size={45} color={focused ? "#B6B5B5" : "black"}/>
                             ),
                         }}/>
-            <Tab.Screen name="Friends" component={Health} 
+            <Tab.Screen name="Friends" component={GroupLeaderboard} 
                         options={{
                             tabBarIcon: ({ focused, color }) => (
                                 <MaterialCommunityIcons name="account-group" size={35} color={focused ? "#B6B5B5" : "black"}/>
