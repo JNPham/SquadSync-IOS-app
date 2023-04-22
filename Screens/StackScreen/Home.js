@@ -127,7 +127,7 @@ export default function Home({ navigation }) {
                     <Avatar
                         rounded
                         containerStyle={{ width: 40, height: 40 }}
-                        source={{ //add user's avatar
+                        source={{ //todo: add user's avatar
                             uri: 'https://i.mydramalist.com/EoPbW_5f.jpg'
                         }}>
                     </Avatar>

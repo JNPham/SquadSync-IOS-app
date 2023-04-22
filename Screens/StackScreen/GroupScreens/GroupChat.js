@@ -3,22 +3,23 @@ import React from 'react';
 import { Video } from 'expo-av';
 import { TouchableOpacity } from 'react-native';
 import { useState, useEffect, useCallback, useLayoutEffect } from 'react';
-import { getDatabase, child, ref, set, get, push } from "firebase/database";
+import { getDatabase, child, ref, set, get, push, query, orderByChild, onValue, serverTimestamp } from "firebase/database";
 import { GiftedChat } from 'react-native-gifted-chat';
-//import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
 import * as ImagePicker from 'expo-image-picker';
 import { getStorage, uploadBytesResumable, uploadBytes, getDownloadURL } from "firebase/storage";
 import { ref as sRef } from 'firebase/storage';
 import { Ionicons } from "@expo/vector-icons";
 import { getAuth } from '@firebase/auth';
+import { Avatar } from 'react-native-elements';
 
 export default function GroupChat({route, navigation }) {
     const defaultGroupPic = 'https://miro.medium.com/max/720/1*W35QUSvGpcLuxPo3SRTH4w.png';
     const db = getDatabase();
     const storage = getStorage();
+    const userId = getAuth().currentUser.uid;
     const groupID = route.params.gID; //get group ID passed from Group Tab
+    const [userName, setUserName] = useState('');
     //Caleb code start
-    const [groupName, setGroupName] = useState();
     const [image, setImage] = useState(defaultGroupPic);
     const [imageAdding, setImageAdding] = useState();
     const [messages, setMessages] = useState([]);
@@ -34,16 +35,7 @@ export default function GroupChat({route, navigation }) {
     function findGroup(groupID) {
         const dbRef = ref(db);
         get(child(dbRef, `groups/${groupID}`)).then((snapshot) => {
-            console.log(groupID);
-            console.log(snapshot.val());
-
             if (snapshot.exists()) {
-                var gName = snapshot.val().name;
-                console.log(gName);
-                setGroupName(gName);
-                
-                var gImage = snapshot.val().url.groupURL;
-                setImage(gImage);
 
                 /*var groupChatRaw = snapshot.val().chat;
                 unpackChatData(groupChatRaw);
@@ -122,8 +114,6 @@ export default function GroupChat({route, navigation }) {
             console.log("Video uploaded!");  
         }
     };
-
-    
 
     // Function used to access user's image library, pick and display an image 
     const pickImage = async () => {
@@ -207,18 +197,72 @@ export default function GroupChat({route, navigation }) {
         }
              
     }
+    // Caleb code end
 
+    //Nhi code start
+    //function searchs from firebase using uid and returns the currently logged in user's username
+    function findUserName(userId) {
+        const dbRef = ref(db);
+        get(child(dbRef, `users/${userId}`)).then((snapshot) => {
+            if (snapshot.exists()) {
+                var value = snapshot.val().username;
+                setUserName(value);
+            } else {
+                console.log("No data available");
+            }
+        }).catch((error) => {
+            console.error(error);
+        });
+    }
 
     useEffect(() => {
+        findUserName(userId);
         findGroup(groupID);
         //findGroup("-NRFdT4ZeDQoMIQu8uaj");
     }, [])
 
+    //function called when sending new message. 
+    const onSend = useCallback((messages = []) => {
+        setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
+        for (let i = 0; i < messages.length; i++) {
+            const { _id, createdAt, text, user } = messages[i];
+            console.log(user);
+            var newChat = push(ref(db, 'groups/' + groupID + '/chat/'), {
+                _id,
+                text,
+                user,
+                createdAt: createdAt.toString(),
+            });  
+        };
+    }, []);
+
+    // load messages from database
+    useLayoutEffect(() => {
+        const q = query(ref(db, 'groups/' + groupID + '/chat/'), orderByChild('createAt', 'desc'));
+        onValue(q, (snapshot) => {
+            let chat = [];
+            snapshot.forEach((child) => {
+                let messageData = {
+                    _id: child.key,
+                    createdAt: new Date(child.val().createdAt),
+                    text: child.val().text,
+                    user: child.val().user,
+                };
+                chat.push(messageData);
+            });
+            chat.reverse() //.map((chat) => ({
+
+            // }));
+            setMessages(chat);
+        });
+
+    }, []);
+
     return(
-        <View
+        <SafeAreaView
             style={styles.container}
             behavior="padding">
-            <TouchableOpacity onPress={pickImage} > 
+            {/* <TouchableOpacity onPress={pickImage} > 
                 <Text>Tap to add Group Image</Text>
             </TouchableOpacity>
             <View style={styles.line} />
@@ -253,10 +297,27 @@ export default function GroupChat({route, navigation }) {
                         />
                     </View>
                 </TouchableOpacity>)}
-            />
-            <Text>{groupID} Page</Text>
+            /> */}
 
-        </View>
+            <GiftedChat
+                messages={messages}
+                showAvatarForEveryMessage={true}
+                onSend={messages => onSend(messages)}
+                user={{id: userId,
+                    name: userName}}
+                renderAvatar={() => {
+                    return (
+                        <Avatar
+                        rounded
+                        containerStyle={{ width: 40, height: 40 }}
+                        source={{ //todo: add user's avatar
+                            uri: 'https://i.mydramalist.com/EoPbW_5f.jpg'
+                        }}>
+                        </Avatar>
+                    )
+                }}
+            />
+        </SafeAreaView>
     )
 }
 // Caleb code end
