@@ -1,5 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { Avatar } from 'react-native-elements';
 
@@ -56,10 +57,10 @@ export function TabNavigation() {
                                 <MaterialCommunityIcons name="home-circle" size={45} color={focused ? "#B6B5B5" : "black"}/>
                             ),
                         }}/>
-            <Tab.Screen name="Friends" component={GroupLeaderboard} 
+            <Tab.Screen name="Leaderboard" component={GroupLeaderboard} 
                         options={{
                             tabBarIcon: ({ focused, color }) => (
-                                <MaterialCommunityIcons name="account-group" size={35} color={focused ? "#B6B5B5" : "black"}/>
+                                <FontAwesome5 name="medal" size={35} color={focused ? "#B6B5B5" : "black"} />
                             ),
                         }}/>
             <Tab.Screen name="Setting" component={Setting} 

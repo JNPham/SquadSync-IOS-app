@@ -1,4 +1,4 @@
-import { StyleSheet, Text, Keyboard, View, Button, Pressable, TextInput, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, Keyboard, ScrollView, SafeAreaView, View, Button, Pressable, TextInput, Image, TouchableOpacity } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getDatabase, child, ref, set, get} from "firebase/database";
@@ -46,21 +46,27 @@ function addRank(entries) {
 function sortGroupsByScore(groupsData) {
   const groupsArray = Object.entries(groupsData).map(([id, group]) => ({ id, ...group }));
   const sortedGroupsArray = groupsArray.sort((a, b) => b.score - a.score);
-  const outputArray = sortedGroupsArray.map(group => ({ name: group.name, score: group.score }));
+  const outputArray = sortedGroupsArray.map(group => ({ name: group.name, score: group.score, url: group.url.groupURL }));
   return outputArray;
 }
   return (
     <View style={styles.container}>
-      
-      <Text style={styles.title}>Group Leaderboard</Text>
-      {groupData.map((group) => (
-        <View key={group.rank} style={styles.row}>
-            <Image source={{ uri: 'https://miro.medium.com/max/720/1*W35QUSvGpcLuxPo3SRTH4w.png' }} style={{ width: 30, height: 30, borderRadius: 30 / 2, borderWidth: 1.5 }} />
-          <Text style={styles.groupName}>     {group.name}</Text>
-          <Text style={styles.groupRank}>{group.score+ "pts    "}</Text>
-          <Text style={styles.groupRank}>{"["+group.rank+"]"}</Text>
-        </View>
-      ))}
+      <SafeAreaView style={styles.header}>
+        <Text style={styles.title}>Group Leaderboard</Text>
+      </SafeAreaView>
+      <View style={styles.body}>
+        <ScrollView contentContainerStyle={{flexGrow: 1}}>  
+          {groupData.map((group) => (
+            <View key={group.rank} style={styles.row}>
+                <Image source={{ uri: group.url }} style={{ width: 45, height: 45, borderRadius: 45 / 2, borderWidth: 1 }} />
+                <Text style={styles.groupName}>     {group.name}</Text>
+                <Text style={styles.groupRank}>{group.score+ " pts    "}</Text>
+                <Text style={styles.groupRank}>{"["+group.rank+"]"}</Text>
+            </View>
+          ))}
+        </ScrollView>
+      </View>
+      <View style={{flex: 0.4}}/>
     </View>
   );
 }
@@ -68,24 +74,37 @@ function sortGroupsByScore(groupsData) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    backgroundColor: 'white',
+    //padding: 16,
+  },
+  header: {
+    flex: 0.4,
+    backgroundColor: '#23272D',
+    alignItems:'center',
+    justifyContent: 'center',
+  },
+  body: {
+    flex: 3,
+    backgroundColor: 'white',
   },
   title: {
     fontSize: 24,
+    color: 'white',
     fontWeight: 'bold',
-    marginBottom: 8,
-    marginTop: 30,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     height: 50,
     marginBottom: 8,
+    paddingLeft: 16,
+    paddingRight: 16,
+    paddingTop: 8
   },
   image: {
     width: 48,
     height: 48,
-    marginRight: 16,
+    paddingRight: 16,
   },
   groupName: {
     flex: 1,

@@ -99,7 +99,6 @@ export default function Home({ navigation }) {
                     refreshing={isRefreshing}
                     onRefresh={() => {
                         loadGroup();
-                        setIsRefreshing(true);
                     }}
                     renderItem={renderItem}
                     keyExtractor={item => item.id}
