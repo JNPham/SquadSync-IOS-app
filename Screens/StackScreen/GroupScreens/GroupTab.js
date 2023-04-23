@@ -2,6 +2,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import GroupChat from './GroupChat';
 import ActivityTracking from './ActivityTracking';
 import GroupSettingPage from './GroupSettingPage';
+import GroupMedia from './GroupMedia';
 
 import { StyleSheet, View, Text, Image, SafeAreaView } from 'react-native';
 import React from 'react';
@@ -84,6 +85,7 @@ export function GroupTab({route, navigation}) {
                                             tabBarInactiveTintColor: '#B6B5B5',
                                             }}>
                     <Tab.Screen name="Chat" component={GroupChat} initialParams={{gID:groupID}}/>
+                    <Tab.Screen name="Media" component={GroupMedia} initialParams={{gID:groupID}}/>
                     <Tab.Screen name="Activity" component={ActivityTracking} initialParams={{gID: groupID}}/>
                 </Tab.Navigator>
             </View>
