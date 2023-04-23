@@ -114,50 +114,50 @@ export default function Home({ navigation }) {
 
     //Home page front-end
     return (
-        <SafeAreaView style={[styles.container, {backgroundColor:theme.background}]}>
-        <View style={styles.header}>
-            <Text style={styles.text}>Hello {userName}!</Text>
-            <Text style={styles.text}>How are you doing today?</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Notification')}
-                style={{ position: 'absolute', right: '5%', top: '5%' }}>
-                <Ionicons name="notifications-circle" size={45} color="#D9D9D9" />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('Profile')}
-                style={{ position: 'absolute', top: '5%' }}>
-                <Avatar
-                    rounded
-                    containerStyle={{ width: 40, height: 40 }}
-                    source={{ //add user's avatar
-                        uri: 'https://i.mydramalist.com/EoPbW_5f.jpg'
-                    }}>
-                </Avatar>
-            </TouchableOpacity>
-            <TextInput style={styles.TextBoxes}
-                placeholder="Looking for a group? Enter the name here."
-                onChangeText={(groupName) => { searchGroup(groupName) }}
-                value={search}
-            ></TextInput>
-            <TouchableOpacity>
-                <Text style={{
-                    fontSize: 14, fontWeight: '600',
-                    position: 'absolute', top:65, left: '17%',
-                    textDecorationLine: 'underline'
-                }}>Explore our public groups here!</Text>
-            </TouchableOpacity>
-        </View>
-        
-        <View style={[{backgroundColor:theme.background}, styles.content]}>
-            <View style={{backgroundColor:theme.background}}>
-                {/* {isLoading ? <ActivityIndicator size="large" /> : showGroups()} */}
-                {showGroups()}
+        <SafeAreaView style={[styles.container]}>
+            <View style={styles.header}>
+                <Text style={styles.text}>Hello {userName}!</Text>
+                <Text style={styles.text}>How are you doing today?</Text>
+                <TouchableOpacity onPress={() => navigation.navigate('Notification')}
+                    style={{ position: 'absolute', right: '5%', top: '5%' }}>
+                    <Ionicons name="notifications-circle" size={45} color="#D9D9D9" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('Profile')}
+                    style={{ position: 'absolute', top: '5%', left: '5%' }}>
+                    <Avatar
+                        rounded
+                        containerStyle={{ width: 40, height: 40 }}
+                        source={{ //todo: add user's avatar
+                            uri: 'https://i.mydramalist.com/EoPbW_5f.jpg'
+                        }}>
+                    </Avatar>
+                </TouchableOpacity>
+                <TextInput style={[styles.TextBoxes, {left: '5%'}]}
+                    placeholder="Looking for a group? Enter the name here."
+                    onChangeText={(groupName) => { searchGroup(groupName) }}
+                    value={search}
+                ></TextInput>
+                <TouchableOpacity>
+                    <Text style={{
+                        color: 'white', fontSize: 14, fontWeight: '600',
+                        position: 'absolute', top:65, left: '17%',
+                        textDecorationLine: 'underline'
+                    }}>Explore our public groups here!</Text>
+                </TouchableOpacity>
             </View>
-            <TouchableOpacity style={{ position: 'absolute', left: '43.5%', bottom: '9%', backgroundColor:theme.background}}
-                onPress={() => navigation.navigate('GroupNavigation', { screen: 'GroupCreation' })}>
-                <Ionicons name="add-circle" size={50} color="#E57A7A" />
-            </TouchableOpacity>
-        </View>
+            
+            <View style={[{backgroundColor:theme.background}, styles.content]}>
+                <View style={{backgroundColor:theme.background}}>
+                    {/* {isLoading ? <ActivityIndicator size="large" /> : showGroups()} */}
+                    {showGroups()}
+                </View>
+                <TouchableOpacity style={{ position: 'absolute', left: '43.5%', bottom: '9%'}}
+                    onPress={() => navigation.navigate('GroupNavigation', { screen: 'GroupCreation' })}>
+                    <Ionicons name="add-circle" size={50} color="#E57A7A" />
+                </TouchableOpacity>
+            </View>
 
-    </SafeAreaView>
+        </SafeAreaView>
     );
 }
 
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     header: {
         flex: 0.75,
         backgroundColor: '#23272D',
-
+        paddingLeft: '5%'
     },
     content: {
         flex: 3,
