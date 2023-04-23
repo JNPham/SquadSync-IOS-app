@@ -85,10 +85,6 @@ export default function GroupCreation({ route, navigation }) {
                 groupURL: url,
                 groupName: groupName,
             });
-            set(ref(db, '/groups/' + newGroup.key + '/chat/'), {          
-                //1: "SquadSync*Start of your new chat!"
-                1: ""
-            });
             //Add image url to group
             set(ref(db, '/groups/' + newGroup.key + '/images/imgDictionary'), {          
                 1: ""

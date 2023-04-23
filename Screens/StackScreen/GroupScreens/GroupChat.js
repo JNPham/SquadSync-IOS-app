@@ -19,6 +19,7 @@ export default function GroupChat({route, navigation }) {
     const userId = getAuth().currentUser.uid;
     const groupID = route.params.gID; //get group ID passed from Group Tab
     const [userName, setUserName] = useState('');
+    //const [userAvatar, setUserAvatar] = useState('');
     //Caleb code start
     const [image, setImage] = useState(defaultGroupPic);
     const [imageAdding, setImageAdding] = useState();
@@ -36,16 +37,11 @@ export default function GroupChat({route, navigation }) {
         const dbRef = ref(db);
         get(child(dbRef, `groups/${groupID}`)).then((snapshot) => {
             if (snapshot.exists()) {
-
-                /*var groupChatRaw = snapshot.val().chat;
-                unpackChatData(groupChatRaw);
-
                 var groupChatImages = snapshot.val().images.imgDictionary;
                 unpackGroupImages(groupChatImages);
 
                 var groupChatVideos = snapshot.val().video.vidDictionary;
-                unpackGroupVideos(groupChatVideos); */
-
+                unpackGroupVideos(groupChatVideos); 
             } else {
                 console.log("No data available 1111");
             }
@@ -53,18 +49,6 @@ export default function GroupChat({route, navigation }) {
             console.error(error);
         });
     }
-
-    /*function unpackChatData(rawChatData) {
-        var messageString = "";
-        for (let i = 0; i < rawChatData.length; i++) {
-            const message = rawChatData[i];
-            if (message !== undefined) {
-              var twoValue = message.split("*");
-              messageString += twoValue[0] + ": " + twoValue[1] + "\n\n";
-            }
-          }
-          setGroupChat(messageString);
-    } */
 
     function unpackGroupImages(rawImageData) {
         var imgUrls = []; 
@@ -97,7 +81,7 @@ export default function GroupChat({route, navigation }) {
             quality: 1,
         });
         if (!result.canceled) {
-            const url = await uploadVideo(groupId, result.assets[0].uri);
+            const url = await uploadVideo(groupID, result.assets[0].uri);
             console.log(url);
             //setImageURL(url);
             videoUrls.push(url)
@@ -108,7 +92,7 @@ export default function GroupChat({route, navigation }) {
 
             const dbRef = ref(getDatabase());
            
-            set(ref(db, '/groups/' + groupId+ '/video'), {
+            set(ref(db, '/groups/' + groupID+ '/video'), {
                 vidDictionary
             });
             console.log("Video uploaded!");  
@@ -125,7 +109,7 @@ export default function GroupChat({route, navigation }) {
             quality: 1,
         });
         if (!result.canceled) {
-            const url = await uploadImage(groupId, result.assets[0].uri);
+            const url = await uploadImage(groupID, result.assets[0].uri);
             console.log(url);
             //setImageURL(url);
             imageUrls.push(url)
@@ -136,7 +120,7 @@ export default function GroupChat({route, navigation }) {
 
             const dbRef = ref(getDatabase());
            
-            set(ref(db, '/groups/' + groupId+ '/images'), {
+            set(ref(db, '/groups/' + groupID+ '/images'), {
                 imgDictionary
             });
             console.log("Image uploaded!");  
@@ -205,8 +189,9 @@ export default function GroupChat({route, navigation }) {
         const dbRef = ref(db);
         get(child(dbRef, `users/${userId}`)).then((snapshot) => {
             if (snapshot.exists()) {
-                var value = snapshot.val().username;
-                setUserName(value);
+                var userName = snapshot.val().username;
+                setUserName(userName);
+                
             } else {
                 console.log("No data available");
             }
@@ -218,7 +203,6 @@ export default function GroupChat({route, navigation }) {
     useEffect(() => {
         findUserName(userId);
         findGroup(groupID);
-        //findGroup("-NRFdT4ZeDQoMIQu8uaj");
     }, [])
 
     //function called when sending new message. 
@@ -230,13 +214,13 @@ export default function GroupChat({route, navigation }) {
             var newChat = push(ref(db, 'groups/' + groupID + '/chat/'), {
                 _id,
                 text,
-                user,
                 createdAt: createdAt.toString(),
+                user
             });  
         };
     }, []);
 
-    // load messages from database
+    // load messages from database and listen to any change
     useLayoutEffect(() => {
         const q = query(ref(db, 'groups/' + groupID + '/chat/'), orderByChild('createAt', 'desc'));
         onValue(q, (snapshot) => {
@@ -246,13 +230,14 @@ export default function GroupChat({route, navigation }) {
                     _id: child.key,
                     createdAt: new Date(child.val().createdAt),
                     text: child.val().text,
-                    user: child.val().user,
+                    user: {
+                        _id: child.val().user._id,
+                        name: child.val().user.name,
+                    }
                 };
                 chat.push(messageData);
             });
-            chat.reverse() //.map((chat) => ({
-
-            // }));
+            chat.reverse();
             setMessages(chat);
         });
 
@@ -262,14 +247,14 @@ export default function GroupChat({route, navigation }) {
         <SafeAreaView
             style={styles.container}
             behavior="padding">
-            {/* <TouchableOpacity onPress={pickImage} > 
+            <TouchableOpacity onPress={pickImage} > 
                 <Text>Tap to add Group Image</Text>
             </TouchableOpacity>
             <View style={styles.line} />
 
             <FlatList
+                horizontal={true}
                 data={imageUrls}
-                numColumns={4}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => (
                     <View style ={{padding: '0.5%'}}>
@@ -284,7 +269,7 @@ export default function GroupChat({route, navigation }) {
             <View style={styles.line} />
             <FlatList
                 data={videoUrls}
-                numColumns={3}
+                horizontal={true}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => (
                 <TouchableOpacity onPress={() => handleVideoPress(item)}>
@@ -297,25 +282,25 @@ export default function GroupChat({route, navigation }) {
                         />
                     </View>
                 </TouchableOpacity>)}
-            /> */}
+            />
 
             <GiftedChat
                 messages={messages}
                 showAvatarForEveryMessage={true}
                 onSend={messages => onSend(messages)}
-                user={{id: userId,
+                user={{_id: userId,
                     name: userName}}
-                renderAvatar={() => {
-                    return (
-                        <Avatar
-                        rounded
-                        containerStyle={{ width: 40, height: 40 }}
-                        source={{ //todo: add user's avatar
-                            uri: 'https://i.mydramalist.com/EoPbW_5f.jpg'
-                        }}>
-                        </Avatar>
-                    )
-                }}
+                // renderAvatar={() => {
+                //     return (
+                //         <Avatar
+                //         rounded
+                //         containerStyle={{ width: 40, height: 40 }}
+                //         source={{ //todo: add user's avatar
+                //             uri: 'https://i.mydramalist.com/EoPbW_5f.jpg'
+                //         }}>
+                //         </Avatar>
+                //     )
+                // }}
             />
         </SafeAreaView>
     )
