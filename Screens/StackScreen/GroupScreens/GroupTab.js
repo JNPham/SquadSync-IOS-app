@@ -92,6 +92,7 @@ export function GroupTab({route, navigation}) {
                     <Tab.Screen name="Chat" component={GroupHomePage} />
                     <Tab.Screen name="Activity" component={ActivityTracking} />
                     <Tab.Screen name="Trends" component={GroupTrends} />
+                    <Tab.Screen name="Map" component={}} />
                 </Tab.Navigator>
             </View>
         </View>
