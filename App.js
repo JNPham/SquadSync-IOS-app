@@ -15,9 +15,11 @@ import React, {useState, useEffect} from 'react';
 import theme from './theme/theme';
 import themeContext from './theme/themeContext';
 import {EventRegister} from 'react-native-event-listeners'
+import MapboxGL from "@react-native-mapbox-gl/maps";
 
 
 const Stack = createStackNavigator();
+MapboxGL.setAccessToken("pk.eyJ1Ijoiam9jZWxybyIsImEiOiJjbGd3amRzMGYwMG9uM2ZteWV1eDJ1cGVjIn0.2gKVgYQEDFpxGRwQ_LCYHg");
 
 export default function App() {
   const [darkMode, setDarkMode] = useState(false)
