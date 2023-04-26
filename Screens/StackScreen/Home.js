@@ -7,8 +7,8 @@ import { Avatar } from 'react-native-elements';
 import { getAuth } from '@firebase/auth';
 import { getStorage, getDownloadURL } from "firebase/storage";
 import { ref as sRef } from 'firebase/storage';
-import GroupHomePage from './GroupScreens/GroupChat';
 import themeContext from '../../theme/themeContext';
+import {Dimensions} from 'react-native';
 
 export default function Home({ navigation }) {
     const theme = useContext(themeContext);
@@ -18,12 +18,12 @@ export default function Home({ navigation }) {
     const storage = getStorage();
     const groupLimit = 20;
     const userId = getAuth().currentUser.uid;
+    const windowWidth = Dimensions.get('window').width;
 
     const [userName, setUserName] = useState('');
     const [search, setSearch] = useState('');
     const [groupList, setGroupList] = useState([]);
     const [numGroup, setNumGroup] = useState(0);
-    const [isRefreshing, setIsRefreshing] = useState(false);
     //const [urlGroup, setUrlGroup] = useState('https://miro.medium.com/max/720/1*W35QUSvGpcLuxPo3SRTH4w.png');
 
     //todo
@@ -54,7 +54,6 @@ export default function Home({ navigation }) {
     }, [])
 
     function loadGroup() {
-        setIsRefreshing(false);
         const groupRef = ref(db, `users/${userId}/groups`);
         onValue(groupRef, (snapshot) => {
             let groups = []
@@ -96,10 +95,9 @@ export default function Home({ navigation }) {
                 <FlatList
                     style={styles.groupDisplay}
                     data={groupList}
-                    refreshing={isRefreshing}
-                    onRefresh={() => {
-                        loadGroup();
-                    }}
+                    // onRefresh={() => {
+                    //     loadGroup();
+                    // }}
                     renderItem={renderItem}
                     keyExtractor={item => item.id}
                     extraData={groupList}
@@ -150,7 +148,7 @@ export default function Home({ navigation }) {
                     {/* {isLoading ? <ActivityIndicator size="large" /> : showGroups()} */}
                     {showGroups()}
                 </View>
-                <TouchableOpacity style={{ position: 'absolute', left: '43.5%', bottom: '9%'}}
+                <TouchableOpacity style={{ left: windowWidth*0.007, bottom: '18%'}}
                     onPress={() => navigation.navigate('GroupNavigation', { screen: 'GroupCreation' })}>
                     <Ionicons name="add-circle" size={50} color="#E57A7A" />
                 </TouchableOpacity>

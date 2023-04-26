@@ -31,7 +31,6 @@ export default function GroupCreation({ route, navigation }) {
     const [tracking, setTracking] = useState('Music');
     const [competition, setCompetition] = useState(false);
     const [inviteCode, setInviteCode] = useState(''); //by default, the group is public so users do not need code to join
-    //const [activityLog, setActivityLog] = useState([]); //Todo: add Activity log on Group Setting page
 
     //function searchs from firebase using uid and returns the currently logged in user's username
     function findUserName(userId){
@@ -92,6 +91,15 @@ export default function GroupCreation({ route, navigation }) {
             //Add video url to group
             set(ref(db, '/groups/' + newGroup.key + '/video/vidDictionary'), {          
                 1: ""
+            });
+            //Add activity log to group
+            var record = new Date();
+            var time = record.toTimeString();
+            var date = record.toDateString();
+            push(ref(db, '/groups/' + newGroup.key + '/activityLog'), {          
+                activity: userName + " created a new group!",
+                date: date,
+                time: time,
             });
             alert('Your group has been successfully created!');
             navigation.navigate('TabNavigation', { screen: 'Home' });
