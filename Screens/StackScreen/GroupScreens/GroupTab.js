@@ -3,7 +3,7 @@ import GroupChat from './GroupChat';
 import ActivityTracking from './ActivityTracking';
 import GroupSettingPage from './GroupSettingPage';
 import GroupMedia from './GroupMedia';
-
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StyleSheet, View, Text, Image, SafeAreaView } from 'react-native';
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
@@ -56,8 +56,12 @@ export function GroupTab({route, navigation}) {
     return (
         <View style={styles.container}>
             <SafeAreaView style={styles.header}>
+                <TouchableOpacity style={{ position: 'absolute', left: '4%', top: '40%' }}
+                    onPress={() => {navigation.navigate('ActivityLog', {groupID:groupID});}}>
+                    <MaterialCommunityIcons name="timeline-clock" size={32} color="white" />
+                </TouchableOpacity>
                 <TouchableOpacity style={{ position: 'absolute', right: '4%', top: '40%' }}
-                    onPress={() => navigation.navigate('GroupNavigation', { screen: 'GroupSettingPage' })}>
+                    onPress={() => navigation.navigate('GroupNavigation', { screen: 'GroupSettingPage'})}>
                     <Ionicons name="ios-settings" size={32} color="white" />
                 </TouchableOpacity>
                 <Image

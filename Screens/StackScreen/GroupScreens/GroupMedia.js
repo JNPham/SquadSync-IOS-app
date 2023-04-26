@@ -3,24 +3,44 @@ import React from 'react';
 import { Video } from 'expo-av';
 import { TouchableOpacity } from 'react-native';
 import { useState, useEffect } from 'react';
-import { getDatabase, child, ref, set, get, onValue } from "firebase/database";
+import { getDatabase, child, ref, push, set, get, onValue } from "firebase/database";
 import * as ImagePicker from 'expo-image-picker';
 import { getStorage, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { ref as sRef } from 'firebase/storage';
 import {Dimensions} from 'react-native';
+import { getAuth } from '@firebase/auth';
 
 export default function GroupMedia({route, navigation }) {
     const defaultGroupPic = 'https://miro.medium.com/max/720/1*W35QUSvGpcLuxPo3SRTH4w.png';
     const db = getDatabase();
     const storage = getStorage();
+    const userId = getAuth().currentUser.uid;
     const groupID = route.params.gID; //get group ID passed from Group Tab
     const windowWidth = Dimensions.get('window').width;
     const windowHeight = Dimensions.get('window').height;
+    const [userName, setUserName] = useState('');
     //Caleb code start
     const [imageUrls, setGroupChatImages] = useState();
     const [videoUrls, setGroupChatVideos] = useState();
     const [selectedVideo, setSelectedVideo] = React.useState(null);
 
+    //Nhi code start
+    //function searchs from firebase using uid and returns the currently logged in user's username
+    function findUserName(userId) {
+        const dbRef = ref(db);
+        get(child(dbRef, `users/${userId}`)).then((snapshot) => {
+            if (snapshot.exists()) {
+                var userName = snapshot.val().username;
+                setUserName(userName);
+                
+            } else {
+                console.log("No data available");
+            }
+        }).catch((error) => {
+            console.error(error);
+        });
+    }
+    
     const handleVideoPress = (videoUrl) => {
         setSelectedVideo(videoUrl);
       };
@@ -96,6 +116,16 @@ export default function GroupMedia({route, navigation }) {
             set(ref(db, '/groups/' + groupID+ '/video'), {
                 vidDictionary
             });
+
+            //Add activity log to group
+            var record = new Date();
+            var time = record.toTimeString();
+            var date = record.toDateString();
+            push(ref(db, '/groups/' + groupID + '/activityLog'), {          
+                activity: userName + " sent a new videos to the group.",
+                date: date,
+                time: time,
+            });
             console.log("Video uploaded!");  
         }
     };
@@ -123,6 +153,16 @@ export default function GroupMedia({route, navigation }) {
            
             set(ref(db, '/groups/' + groupID+ '/images'), {
                 imgDictionary
+            });
+
+            //Add activity log to group
+            var record = new Date();
+            var time = record.toTimeString();
+            var date = record.toDateString();
+            push(ref(db, '/groups/' + groupID + '/activityLog'), {          
+                activity: userName + " sent a new picture to the group.",
+                date: date,
+                time: time,
             });
             console.log("Image uploaded!");  
         }
@@ -212,6 +252,7 @@ export default function GroupMedia({route, navigation }) {
         //findGroup(groupID);
         unpackGroupImages(groupID);
         unpackGroupVideos(groupID);
+        findUserName(userId);
     }, [])
 
     return(

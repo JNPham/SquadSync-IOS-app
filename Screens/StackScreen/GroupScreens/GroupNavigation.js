@@ -2,9 +2,9 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import GroupCreation from "./GroupCreation";
-import GroupHomePage from "./GroupChat";
 import {GroupTab} from "./GroupTab";
 import GroupSettingPage from "./GroupSettingPage";
+import ActivityLog from "./ActivityLog";
 
 const Stack = createStackNavigator();
 
@@ -15,6 +15,7 @@ export function GroupNavigation() {
       <Stack.Screen name="GroupCreation" component={GroupCreation} />
       <Stack.Screen name="GroupTab" component={GroupTab} />
       <Stack.Screen name="GroupSettingPage" component={GroupSettingPage} />
+      <Stack.Screen name="ActivityLog" component={ActivityLog} />
     </Stack.Navigator>
   )
 } 
