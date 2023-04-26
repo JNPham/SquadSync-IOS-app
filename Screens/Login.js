@@ -1,4 +1,4 @@
-import { getDatabase, ref, set, onValue, push, update, remove } from "firebase/database";
+import { getDatabase, ref, set, get, child, increment, onValue, push, update, remove } from "firebase/database";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -16,6 +16,7 @@ export default function Login({navigation}) {
     // Initializing the state for email and password
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
 
     // firebase things 
     const auth = getAuth();
@@ -39,7 +40,9 @@ export default function Login({navigation}) {
         .then((userCredential) => {
           // Signed in if the user's credientials are valid 
           const user = userCredential.user;
+          const userId = getAuth().currentUser.uid;
           console.log('Logged in with:', user.email);
+          setStreak(userId);
           alert('Login successful!');
           navigation.navigate('TabNavigation', {screen: 'Home'}); 
         
@@ -51,6 +54,36 @@ export default function Login({navigation}) {
           console.log(errorMessage)
           alert('Login not successful. Try Again');
         })
+
+    }
+
+    // Updates the streak counter once we login 
+    function setStreak(userId){
+        const streakRef = ref(db,  "users/" + userId+ "/streak");
+        update(streakRef, {
+            streak: increment(1)
+        })
+        console.log("Streak updated")
+        
+        // get(child(dbRef, `users/${userId}/streak`)).then((snapshot) => {
+        //     if (snapshot.exists()) {
+        //         var value = snapshot.val().streak;
+        //         console.log("value: " + value)
+        //         set(ref(db, `users/${userId}/streak`), {          
+        //             streak: ,
+        //           })
+        //         console.log("Updating the streak");
+        //     }
+        //     else {
+        //         set(ref(db, `users/${userId}/streak`), {          
+        //             streak: 1,
+        //           })
+        //           console.log("New streak!")
+        //     }
+        // }).catch((error) => {
+        //     console.error(error);   
+        // }); 
+
 
     }
 
