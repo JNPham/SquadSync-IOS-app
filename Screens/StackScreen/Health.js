@@ -82,32 +82,43 @@ export default function Health({ navigation }) {
     }, []) 
 
     return (
-      <View style={[styles.container, {backgroundColor: theme.background}]}>
-        <Text style={[styles.label, {color: theme.color}]}>Set your daily goal:</Text>
-        <TextInput
-          style={[styles.input,  {color: theme.color}]}
-          keyboardType="numeric"
-          value={stepGoal.toString()}
-          onChangeText={(text) => setStepGoal(parseInt(text) || 0)}
-        />
-        <Text style={[styles.label, {color: theme.color}]}>Today's steps so far:</Text>
-        <TextInput
-          style={[styles.input,  {color: theme.color}]}
-          keyboardType="numeric"
-          value={stepToday.toString()}
-          onChangeText={(text) => setStepToday(parseInt(text) || 0)}
-        />
-        <Text style={[styles.label, {color: theme.color}]}>Today's progress:</Text>
-        <Text style={[styles.progress, {color: theme.color}]}>
+      <View style={styles.container}>
+      <Text style={styles.label}>Set your daily goal:</Text>
+      <TextInput
+        style={styles.input}
+        keyboardType="numeric"
+        value={stepGoal.toString()}
+        onChangeText={(text) => setStepGoal(parseInt(text) || 0)}
+      />
+      <Text style={styles.label}>Today's steps so far:</Text>
+      <TextInput
+        style={styles.input}
+        keyboardType="numeric"
+        value={stepToday.toString()}
+        onChangeText={(text) => setStepToday(parseInt(text) || 0)}
+      />
+      <View style={styles.progressContainer}>
+        <Text style={styles.label}>Today's progress:</Text>
+        <Text style={styles.progressText}>
           {stepToday} / {stepGoal}
         </Text>
-        <Text style={[styles.percent, {color:theme.color}]}>
+        <Text style={styles.percentText}>
           {percentage}% of goal achieved
         </Text>
-        <Button title="Save" onPress={handleSave} />
-        <Button title="Reset Data" onPress={handleReset} />
-
       </View>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={handleSave}
+      >
+        <Text style={styles.buttonText}>Save</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.button, styles.resetButton]}
+        onPress={handleReset}
+      >
+        <Text style={styles.buttonText}>Reset Data</Text>
+      </TouchableOpacity>
+    </View>
     );
 }
 
@@ -116,26 +127,46 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#fff',
+    paddingTop: 80,
+    backgroundColor: '#F2F2F2',
   },
   label: {
-    fontSize: 18,
-    marginTop: 16,
-    marginBottom: 8,
+    fontSize: 16,
+    marginVertical: 8,
   },
   input: {
     borderWidth: 1,
     borderRadius: 4,
-    padding: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 10,
     marginBottom: 16,
+    backgroundColor: '#FFFFFF',
   },
-  progress: {
-    fontSize: 24,
+  progressContainer: {
+    alignItems: 'center',
+    marginVertical: 16,
+  },
+  progressText: {
+    fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 8,
+    marginVertical: 8,
   },
-  percent: {
-    fontSize: 24,
-    marginBottom: 16,
+  percentText: {
+    fontSize: 20,
+  },
+  button: {
+    backgroundColor: '#4EBDEF',
+    borderRadius: 8,
+    padding: 16,
+    alignItems: 'center',
+    marginVertical: 8,
+  },
+  resetButton: {
+    backgroundColor: '#DD5044',
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
