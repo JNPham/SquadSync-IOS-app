@@ -35,13 +35,15 @@ export default function GroupLeaderboard() {
 function addRank(entries) {
   // Sort entries by score in descending order
   const sortedEntries = entries.sort((a, b) => b.score - a.score);
-  
+
   // Add rank to each entry
   return sortedEntries.map((entry, index) => ({
     ...entry,
-    rank: index + 1
+    rank: index + 1 <= 3 ? ["🥇", "🥈", "🥉"][index] : index + 1 + (index === 3 ? "" : "")
   }));
 }
+
+
 
 function sortGroupsByScore(groupsData) {
   const groupsArray = Object.entries(groupsData).map(([id, group]) => ({ id, ...group }));
@@ -66,7 +68,7 @@ function sortGroupsByScore(groupsData) {
                 <Image source={{ uri: group.url }} style={{ width: 45, height: 45, borderRadius: 45 / 2, borderWidth: 1 }} />
                 <Text style={styles.groupName}>     {group.name}</Text>
                 <Text style={styles.groupRank}>{group.score+ " pts    "}</Text>
-                <Text style={styles.groupRank}>{"["+group.rank+"]"}</Text>
+                <Text style={styles.groupRank2}>{group.rank}</Text>
             </View>
           ))}
         </ScrollView>
@@ -117,6 +119,20 @@ const styles = StyleSheet.create({
   },
   groupRank: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: 'normal',
   },
+  
+  groupRank2: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    textAlign: 'center',
+    lineHeight: 30,
+    overflow: 'hidden'
+  },
+  
+
+  
 });
