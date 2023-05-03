@@ -45,10 +45,15 @@ function addRank(entries) {
 
 function sortGroupsByScore(groupsData) {
   const groupsArray = Object.entries(groupsData).map(([id, group]) => ({ id, ...group }));
-  const sortedGroupsArray = groupsArray.sort((a, b) => b.score - a.score);
-  const outputArray = sortedGroupsArray.map(group => ({ name: group.name, score: group.score, url: group.url.groupURL }));
+  const sortedGroupsArray = groupsArray.sort((a, b) => {
+    const scoreA = a.score || 0; // set score to 0 if it's undefined
+    const scoreB = b.score || 0;
+    return scoreB - scoreA;
+  });
+  const outputArray = sortedGroupsArray.map(group => ({ name: group.name, score: group.score || 0, url: group.url.groupURL }));
   return outputArray;
 }
+
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.header}>
