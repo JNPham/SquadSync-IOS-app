@@ -19,10 +19,12 @@
     "expo-status-bar": "~1.4.2",
     "firebase": "^9.17.1",
     "react": "18.1.0",
-    "react-native": "0.70.5",
+    "react-native": "0.70.8",
+    "react-native-dialog-input": "^1.0.8",
     "react-native-elements": "^3.4.2",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
-    "react-native-keyboard-aware-scrollview": "^2.1.0"
+    "react-native-keyboard-aware-scrollview": "^2.1.0",
+    "react-native-reanimated-carousel": "^3.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
