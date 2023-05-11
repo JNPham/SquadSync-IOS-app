@@ -12,7 +12,9 @@ import themeContext from '../../../theme/themeContext';
 import { color } from 'react-native-elements/dist/helpers';
 
 items = [];
-sortedItems = []; 
+sortedItems = [];
+finalSortedItems = []; 
+
 // streakScore = [];
 
 
@@ -41,13 +43,9 @@ function getDataAndFormat(items) {
             }); 
                 
     });
-    // console.log(items);
-    // console.log("");
-    // console.log("sorting now");
-    // console.log("");
-    // console.log("new items");
+
     sortedItems = sortObj(items);
-    // console.log(sortedItems);
+    finalSortedItems = sortedItems.splice(0, 5);
 
     });
 
@@ -116,7 +114,7 @@ export default function GroupSettingPage({ navigation })  {
             
             <FlatList 
              style={styles.feed}
-             data={sortedItems}
+             data={finalSortedItems}
              renderItem={({item}) => renderPost(item)}
              keyExtractor={item => item.id}
              showsVerticalScrollIndicator = {false}
