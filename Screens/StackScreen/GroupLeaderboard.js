@@ -61,14 +61,14 @@ function sortGroupsByScore(groupsData) {
       <SafeAreaView style={styles.header}>
         <Text style={styles.title}>Group Leaderboard</Text>
       </SafeAreaView>
-      <View style={styles.body}>
+      <View style={[styles.body, {backgroundColor: theme.background}]}>
         <ScrollView contentContainerStyle={{flexGrow: 1}}>  
           {groupData.map((group) => (
             <View key={group.rank} style={styles.row}>
                 <Image source={{ uri: group.url }} style={{ width: 45, height: 45, borderRadius: 45 / 2, borderWidth: 1 }} />
-                <Text style={styles.groupName}>     {group.name}</Text>
-                <Text style={styles.groupRank}>{group.score+ " pts    "}</Text>
-                <Text style={styles.groupRank2}>{group.rank}</Text>
+                <Text style={[styles.groupName, {color:theme.color}]}>     {group.name}</Text>
+                <Text style={[styles.groupRank, {color:theme.color}]}>{group.score+ " pts    "}</Text>
+                <Text style={[styles.groupRank2, {color:theme.color}]}>{group.rank}</Text>
             </View>
           ))}
         </ScrollView>

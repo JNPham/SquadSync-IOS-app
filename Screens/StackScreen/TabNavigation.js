@@ -44,13 +44,13 @@ export function TabNavigation() {
                                 </Avatar>
                             ),
                         }}/>
-            <Tab.Screen name="Notification" component={Notification} 
+            {/* <Tab.Screen name="Notification" component={Notification} 
                         options={{
                             tabBarIcon: ({ focused, color }) => (
                                 <Ionicons name="notifications" size={35} color={focused ? "#B6B5B5" : "black"} />
                             ),
                             tabBarBadge: 3 // demo badge -> need to fix
-                        }}/>
+                        }}/> */}
             <Tab.Screen name="Home" component={Home} 
                         options={{
                             tabBarIcon: ({ focused, color }) => (

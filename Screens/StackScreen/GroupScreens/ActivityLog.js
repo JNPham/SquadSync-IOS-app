@@ -71,8 +71,8 @@ export default function ActivityLog({route, navigation}) {
         let time = changeTimeFormat(item.time);
         return (
             <View style={styles.actLog}>
-                <View style={styles.circle}/>
-                <View style={[styles.verticleLine, {borderColor: theme.borderColor}]} />
+                <View style={[styles.circle, {color: theme.color}]}/>
+                <View style={[styles.verticleLine, {color: theme.color}]} />
                 <View style={{flex: 1, paddingLeft: '1%'}}>
                     <TouchableOpacity onPress={changeColor()}>
                         <View style={styles.datetime}>
@@ -81,7 +81,7 @@ export default function ActivityLog({route, navigation}) {
                         </View>
                         
                         <View style={styles.activity}>
-                            <Text style={{ fontWeight: '600', paddingTop: '1.5%', color: theme.color }}>{act}</Text>
+                            <Text style={{ fontWeight: '600', paddingTop: '1.5%'}}>{act}</Text>
                         </View>
                     </TouchableOpacity>
                 </View>

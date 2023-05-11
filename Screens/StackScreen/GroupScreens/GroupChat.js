@@ -1,11 +1,12 @@
 import { StyleSheet, SafeAreaView} from 'react-native';
 import React from 'react';
-import { useState, useEffect, useCallback, useLayoutEffect } from 'react';
+import { useState, useEffect, useCallback, useLayoutEffect, useContext } from 'react';
 import { getDatabase, child, ref, set, get, push, query, orderByChild, onValue} from "firebase/database";
 import { GiftedChat } from 'react-native-gifted-chat';
 import { getStorage} from "firebase/storage";
 import { getAuth } from '@firebase/auth';
 import { Avatar } from 'react-native-elements';
+import themeContext from '../../../theme/themeContext';
 
 export default function GroupChat({route, navigation }) {
     const defaultGroupPic = 'https://miro.medium.com/max/720/1*W35QUSvGpcLuxPo3SRTH4w.png';
@@ -15,6 +16,9 @@ export default function GroupChat({route, navigation }) {
     const [userName, setUserName] = useState('');
     //const [userAvatar, setUserAvatar] = useState('');
     const [messages, setMessages] = useState([]);
+
+    // darkmode 
+    const theme = useContext(themeContext);
 
     //Nhi code start
     //function searchs from firebase using uid and returns the currently logged in user's username
@@ -77,7 +81,7 @@ export default function GroupChat({route, navigation }) {
 
     return(
         <SafeAreaView
-            style={styles.container}
+            style={[styles.container, {backgroundColor: theme.background}]}
             behavior="padding">
             <GiftedChat
                 messages={messages}
