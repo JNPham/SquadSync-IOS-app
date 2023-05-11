@@ -11,7 +11,9 @@ import DialogInput from 'react-native-dialog-input';
 const Nickname = () => {
     const defaultProfilePic = 'https://miro.medium.com/max/720/1*W35QUSvGpcLuxPo3SRTH4w.png';
     const [visible, setVisible] = React.useState(false);
+    const [visible2, setVisible2] = React.useState(false);
     const [input, setInput] = React.useState('');
+    const [jg, setjg] = React.useState('');
     return (
         <View style={styles.container}>
             <Image
@@ -39,14 +41,31 @@ const Nickname = () => {
                 title='Add Nickname'
                 onPress={() => setVisible(true)}
             />
+            {jg ? 
+                <Text style={styles.title}>{jg}</Text>
+                :
+                <Text style={styles.title}>Group</Text>
+            }
+            
+            <DialogInput 
+                isDialogVisible={visible2}
+                title={"Join Group"}
+                message={"Which group would you like to join?"}
+                hintInput ={"Enter Text"}
+                submitInput={ (inputText) => {
+                    setjg(inputText),
+                    setVisible(false);
+                }}
+                closeDialog={() => setVisible2(false)}>
+            </DialogInput>
             <Button 
                 style = {styles.button1}
                 title='Join Group'
                 color = 'Blue'
-                onPress={() => alert("Joining Group")}
+                onPress={() => setVisible2(true)}
             />
               <Button 
-                style = {styles.button1}
+                style = {styles.button2}
                 title='Leave Group'
                 color = 'Blue'
                 onPress={() => alert("Leaving Group")}
@@ -60,6 +79,7 @@ const styles = StyleSheet.create({
         flex:1,
         justifyContent:'center',
         alignItems:'center',
+        bottom: 50
     },
     title: {
         fontSize:20, 
@@ -71,7 +91,13 @@ const styles = StyleSheet.create({
     },
 
     button1: {
-        marginBottom: 50
+        marginBottom: 50,
+        bottom: 40
+    }, 
+
+    button2: {
+        marginBottom: 50,
+        top: 40
     }
 });
 
