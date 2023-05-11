@@ -1,4 +1,4 @@
-import { getDatabase, ref, set, onValue, push, update, remove } from "firebase/database";
+import { getDatabase, ref, set, onValue, push, update, increment, remove } from "firebase/database";
 import { StatusBar } from "expo-status-bar";
 import React, {useEffect, useState, useRef} from "react";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -104,9 +104,11 @@ export default function Login({navigation}) {
         .then((userCredential) => {
           // Signed in if the user's credientials are valid 
           const user = userCredential.user;
+          const userId = getAuth().currentUser.uid;
           console.log('Logged in with:', user.email);
           alert('Login successful!');
-          navigation.navigate('TabNavigation', {screen: 'Home'}); 
+          navigation.navigate('TabNavigation', {screen: 'Home'});
+          setStreak(userId); 
           notify();
         })
         // If the user's credientials aren't valid, result in error 
@@ -118,6 +120,15 @@ export default function Login({navigation}) {
         })
 
     }
+
+        // Updates the streak counter once we login 
+        function setStreak(userId){
+            const streakRef = ref(db,  "users/" + userId+ "/streak");
+            update(streakRef, {
+                streak: increment(1)
+            })
+            console.log("Streak updated")    
+        }
 
     // // todo: Sign up with Google Account
     function googleAcct() {
