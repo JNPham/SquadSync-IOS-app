@@ -82,15 +82,15 @@ export default function Health({ navigation }) {
     }, []) 
 
     return (
-      <View style={styles.container}>
-      <Text style={styles.label}>Set your daily goal:</Text>
+      <View style={[styles.container, {backgroundColor: theme.background}]}>
+      <Text style={[styles.label, {color:theme.color}]}>Set your daily goal:</Text>
       <TextInput
         style={styles.input}
         keyboardType="numeric"
         value={stepGoal.toString()}
         onChangeText={(text) => setStepGoal(parseInt(text) || 0)}
       />
-      <Text style={styles.label}>Today's steps so far:</Text>
+      <Text style={[styles.label, {color:theme.color}]}>Today's steps so far:</Text>
       <TextInput
         style={styles.input}
         keyboardType="numeric"
@@ -98,11 +98,11 @@ export default function Health({ navigation }) {
         onChangeText={(text) => setStepToday(parseInt(text) || 0)}
       />
       <View style={styles.progressContainer}>
-        <Text style={styles.label}>Today's progress:</Text>
-        <Text style={styles.progressText}>
+        <Text style={[styles.label, {color:theme.color}]}>Today's progress:</Text>
+        <Text style={[styles.progressText, {color:theme.color}]}>
           {stepToday} / {stepGoal}
         </Text>
-        <Text style={styles.percentText}>
+        <Text style={[styles.percentText, {color:theme.color}]}>
           {percentage}% of goal achieved
         </Text>
       </View>
