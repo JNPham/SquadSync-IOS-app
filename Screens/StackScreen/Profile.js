@@ -114,6 +114,7 @@ const Nickname = ({ navigation }) => {
                 closeDialog={() => setVisible(false)}>
             </DialogInput>
             <Button
+                style={[styles.button, {top: '10%'}]}
                 title='Add Nickname'
                 onPress={() => setVisible(true)}
             />
@@ -127,7 +128,7 @@ const Nickname = ({ navigation }) => {
                 closeDialog={() => setVisible2(false)}>
             </DialogInput>
             <Button
-                style={styles.button1}
+                style={[styles.button, {top: '20%'}]}
                 title='Join Group'
                 color='Blue'
                 onPress={() => setVisible2(true)}
@@ -141,14 +142,14 @@ const Nickname = ({ navigation }) => {
             closeDialog={() => setVisible3(false)}>
             </DialogInput>
             <Button
-                style={styles.button1}
+                style={[styles.button, {top: '30%'}]}
                 title='Leave Group'
                 color='Blue'
                 onPress={() => setVisible3(true)}
                 />
 
             <Button
-                style={styles.button2}
+                style={[styles.button, {top: '40%'}]}
                 title='Health Stat'
                 color='Blue'
                 onPress={() => navigation.navigate('Health')}
@@ -174,15 +175,15 @@ const styles = StyleSheet.create({
         borderRadius: 30,
     },
 
-    button1: {
+    button: {
         marginBottom: 50,
         bottom: 40
     },
 
-    button2: {
-        marginBottom: 50,
-        top: 40
-    }
+    // button: {
+    //     marginBottom: 50,
+    //     top: 40
+    // }
 });
 
 export default Nickname;
