@@ -23,9 +23,23 @@ const Nickname = ({ navigation }) => {
     const [input, setInput] = React.useState('');
     const [jg, setjg] = React.useState('');
     const [rg, setrg] = React.useState('');
+    const [url, setURL] = React.useState();
     const db = getDatabase();
     const userId = getAuth().currentUser.uid;
     
+    function findGroup(groupID) {
+      const dbRef = ref(db);
+      get(child(dbRef, `groups/${groupID}/url`)).then((snapshot) => {
+          if (snapshot.exists()) {
+              var url = snapshot.val().groupURL;
+              setURL(url);
+          } else {
+              console.log("No data available");
+          }
+      }).catch((error) => {
+          console.error(error);
+      });
+  }
     const handleJoinGroup = (inputText) => {
         const dbRef = ref(db, "/groups");
         let foundGroup = false;
@@ -35,10 +49,15 @@ const Nickname = ({ navigation }) => {
           for (const [key, value] of groupList) {
             if (value.name === inputText) {
               foundGroup = true;
+              findGroup(key);
               alert(`Joined group ${inputText}`);
               setjg(inputText); // set the joined group name
               const userId = getAuth().currentUser.uid;
               push(ref(db, `groups/${key}/members`), { memberID: userId});
+              set(ref(db, 'users/' + userId + '/groups/' + key), {
+                groupURL: url,
+                groupName: value.name,
+              });
               break;
             }
           }
