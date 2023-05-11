@@ -51,42 +51,45 @@ const Nickname = ({ navigation }) => {
         setVisible2(false);
       };
       
-      
-    
-    const handleLeaveGroup = (inputText) => {
-        const dbRef = ref(db, "groups");
+      const handleLeaveGroup = (inputText) => {
+        const dbRef = ref(db, "/groups");
         let foundGroup = false;
-        get(child(dbRef, "groups")).then((snapshot) => {
-            const groups = snapshot.val();
-            if (groups) {
-                for (const [key, value] of Object.entries(groups)) {
-                    if (value.name === inputText) {
-                        foundGroup = true;
-                        alert(`Left group ${inputText}`);
-                        setrg(inputText); // set the left group name
-                        const userId = getAuth().currentUser.uid;
-                        const memberRef = ref(db, `groups/${key}/members`);
-                        get(child(memberRef, userId)).then((snapshot) => {
-                            if (snapshot.exists()) {
-                                remove(child(memberRef, userId));
-                            } else {
-                                alert(`You are not a member of group ${inputText}`);
-                            }
-                        });
-                        break;
+        get(dbRef).then((snapshot) => {
+          const groups = snapshot.val();
+          const groupList = Object.entries(groups);            
+          for (const [key, value] of groupList) {
+            if (value.name === inputText) {
+              foundGroup = true;
+              const userId = getAuth().currentUser.uid;
+              const memberRef = ref(db, `groups/${key}/members`);
+              get(memberRef).then((snapshot) => {
+                const members = snapshot.val();
+                if (members) {
+                  const memberList = Object.entries(members);
+                  for (const [memberKey, memberValue] of memberList) {
+                    if (memberValue.memberID === userId) {
+                      remove(ref(db, `groups/${key}/members/${memberKey}`));
+                      setrg(inputText); // set the left group name
+                      alert(`You have left group ${inputText}`);
+                      break;
                     }
+                  }
                 }
+              });
+              break;
             }
-            if (!foundGroup) {
-                alert(`Group ${inputText} not found`);
-            }
+          }
+          if (!foundGroup) {
+            alert(`Group ${inputText} not found`);
+          }
         }).catch((error) => {
-            console.error(error);
+          console.error(error);
         });
         setVisible3(false);
-    };
-    
-    
+      };
+      
+      
+
     return (
         <View style={styles.container}>
             <Image
@@ -130,12 +133,12 @@ const Nickname = ({ navigation }) => {
                 onPress={() => setVisible2(true)}
             />
             <DialogInput
-                isDialogVisible={visible3}
-                title={"Leave Group"}
-                message={"Which group would you like to leave?"}
-                hintInput={"Enter Text"}
-                submitInput={handleLeaveGroup}
-                closeDialog={() => setVisible3(false)}>
+            isDialogVisible={visible3}
+            title={"Leave Group"}
+            message={"Which group would you like to leave?"}
+            hintInput={"Enter Text"}
+            submitInput={handleLeaveGroup}
+            closeDialog={() => setVisible3(false)}>
             </DialogInput>
             <Button
                 style={styles.button1}
