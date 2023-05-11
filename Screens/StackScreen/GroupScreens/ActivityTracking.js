@@ -13,11 +13,14 @@ import { color } from 'react-native-elements/dist/helpers';
 
 items = [];
 sortedItems = []; 
-streakScore = [];
+// streakScore = [];
+
 
 // const db = getDatabase();
 
 const flameImage = require('../../../assets/flame.png');
+
+
 
 
 function getDataAndFormat(items) {
@@ -56,18 +59,7 @@ function sortObj(items){
     };
 
 
-function getScore(userId){
-    const db = getDatabase();
-    const dbRef = ref(db);
-    get(child(dbRef, `users/${userId}/streak/`)).then((snapshot) => {
-        if (snapshot.exists()) {
-            streakScore.push({
-                score: snapshot.val().streak,
-            });
-        }
-    });
-    console.log(streakScore);
-};
+
   
 getDataAndFormat(items);
 
@@ -81,18 +73,22 @@ export default function GroupSettingPage({ navigation })  {
     const userId = getAuth().currentUser.uid;
     const streakRef = ref(db,  "users/" + userId+ "/streak");
 
+    const [streakScore, setStreakScore] = useState();
+
+    function getScore(userId){
+        const db = getDatabase();
+        const dbRef = ref(db);
+        get(child(dbRef, `users/${userId}/streak/`)).then((snapshot) => {
+            if (snapshot.exists()) {
+                var score = snapshot.val().streak;
+                setStreakScore(score); 
+            }
+        });
+        console.log(streakScore);
+    };
+
     getScore(userId);
     
-
-    const Item = ({score}) => (
-        <View style={styles.scoreItem}>
-            <Image source={flameImage} style={styles.avatar}/>
-            <View style={{flex:1, marginLeft: 10, marginTop: 18}}>
-                <Text style={styles.flatlistText}>Streak Score: {score}</Text>
-            </View>
-        </View>
-      );
-
     renderPost = post => {
         
         return (
@@ -110,13 +106,13 @@ export default function GroupSettingPage({ navigation })  {
     return (
         <View style={[styles.container, {backgroundColor: theme.background}]}>
             
-            <FlatList 
-             style={styles.feed}
-             data={streakScore}
-             renderItem={({item}) => <Item score={item.score} />}
-             keyExtractor={item => item.id}
-             showsVerticalScrollIndicator = {false}
-             />
+            <View style={styles.scoreItem}>
+                <Image source={flameImage} style={styles.avatar}/>
+                <View style={{flex:1, marginLeft: 10, marginTop: 18}}>
+                    <Text style={styles.flatlistText}>Streak Score: {streakScore}</Text>
+                </View>
+            </View>
+
             
             <FlatList 
              style={styles.feed}
