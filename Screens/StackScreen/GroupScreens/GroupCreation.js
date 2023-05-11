@@ -197,7 +197,7 @@ export default function GroupCreation({ route, navigation }) {
 
                     <Text style={styles.text}>Admin: </Text>
                     <TextInput value={admin} 
-                        editable = 'False'
+                        editable = {false}
                         placeholder={userName} 
                         style={[styles.textInput]}>
                     </TextInput>

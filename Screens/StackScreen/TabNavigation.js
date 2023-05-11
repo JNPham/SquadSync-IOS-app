@@ -69,6 +69,7 @@ export function TabNavigation() {
                                 <Ionicons name="ios-settings" size={35} color={focused ? "#B6B5B5" : "black"}/>
                             ),
                         }}/>
+        
         </Tab.Navigator>
     );
 }
