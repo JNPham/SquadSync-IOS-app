@@ -20,12 +20,29 @@ const Nickname = ({ navigation }) => {
     const [visible2, setVisible2] = React.useState(false);
     const [input, setInput] = React.useState('');
     const [jg, setjg] = React.useState('');
+    const db = getDatabase();
     
     const handleJoinGroup = (inputText) => {
-        setjg(inputText);
-        
+        const dbRef = ref(db, "groups");
+        let foundGroup = false;
+        onValue(dbRef, (snapshot) => {
+          const groups = snapshot.val();
+          for (const [key, value] of Object.entries(groups)) {
+            if (value.name === inputText) {
+              foundGroup = true;
+              alert(`Joined group ${inputText}`);
+              setjg(inputText); // set the joined group name
+              break;
+            }
+          }
+          if (!foundGroup) {
+            alert(`Group ${inputText} not found`);
+          }
+        });
         setVisible2(false);
-    };
+      };
+      
+      
     
     return (
         <View style={styles.container}>
@@ -80,10 +97,11 @@ const Nickname = ({ navigation }) => {
                 title='Health Stat'
                 color='Blue'
                 onPress={() => navigation.navigate('Health')}
-/>
+            />
         </View>
     );
 }
+
 
 const styles = StyleSheet.create({
     container: {
