@@ -17,7 +17,6 @@ export function GroupNavigation() {
       <Stack.Screen name="GroupTab" component={GroupTab} />
       <Stack.Screen name="GroupSettingPage" component={GroupSettingPage} />
       <Stack.Screen name="ActivityLog" component={ActivityLog} />
-      <Stack.Screen name="GroupMapView" component={GroupMap} />
     </Stack.Navigator>
   )
 } 

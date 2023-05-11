@@ -10,7 +10,7 @@ import { Avatar } from 'react-native-elements';
 export default function GroupChat({route, navigation }) {
     const defaultGroupPic = 'https://miro.medium.com/max/720/1*W35QUSvGpcLuxPo3SRTH4w.png';
     const db = getDatabase();
-    const userId = getAuth().currentUser.uid;
+    const userId = getAuth().currentuid;
     const groupID = route.params.gID; //get group ID passed from Group Tab
     const [userName, setUserName] = useState('');
     //const [userAvatar, setUserAvatar] = useState('');
@@ -63,8 +63,8 @@ export default function GroupChat({route, navigation }) {
                     createdAt: new Date(child.val().createdAt),
                     text: child.val().text,
                     user: {
-                        _id: child.val().user._id,
-                        name: child.val().user.name,
+                        _id: child.val().userId,
+                        name: child.val().userName,
                     }
                 };
                 chat.push(messageData);

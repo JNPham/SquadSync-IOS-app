@@ -2,6 +2,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import GroupChat from './GroupChat';
 import ActivityTracking from './ActivityTracking';
 import GroupSettingPage from './GroupSettingPage';
+import GroupMap from './GroupMap';
 import GroupMedia from './GroupMedia';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StyleSheet, View, Text, Image, SafeAreaView } from 'react-native';
@@ -11,6 +12,7 @@ import { useState, useEffect } from 'react';
 import { getDatabase, child, ref, get} from "firebase/database";
 import { Ionicons } from "@expo/vector-icons";
 import { getAuth } from '@firebase/auth';
+import GroupTrends from './GroupTrends';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -91,6 +93,9 @@ export function GroupTab({route, navigation}) {
                     <Tab.Screen name="Chat" component={GroupChat} initialParams={{gID:groupID}}/>
                     <Tab.Screen name="Media" component={GroupMedia} initialParams={{gID:groupID}}/>
                     <Tab.Screen name="Activity" component={ActivityTracking} initialParams={{gID: groupID}}/>
+                    <Tab.Screen name="Trends" component={GroupTrends} initialParams={{gID: groupID}} />
+                    <Tab.Screen name="Map" component={GroupMap} />
+                    
                 </Tab.Navigator>
             </View>
         </View>

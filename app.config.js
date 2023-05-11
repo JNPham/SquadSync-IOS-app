@@ -20,14 +20,23 @@ export default{
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "inforPlist":{
+        "UIBackgroundModes":[
+          "location",
+          "fetch"
+        ]
+      }
     },
     "android": {
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "foregroundImage": "./assets/squadsync.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "permissions":[
+        'ACCESS_BACKGROUND_LOCATION'
+      ]
     },
     "web": {
       "favicon": "./assets/squadsync.png"
