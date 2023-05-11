@@ -66,12 +66,12 @@ export default function App() {
   const onClick = async () => {
     await Notifications.scheduleNotificationAsync({
       content: {
-        title: "Push Notification",
-        body: "Here is an in-app notification",
-        data: { data: "Sent a Push Notifcation" }
+        title: "SquadSync",
+        body: "Welcome to SquadSync",
+        data: { data: "Welcome to SquadSync" }
       },
       trigger: {
-        seconds:1
+        seconds:10
       }
     });
   }

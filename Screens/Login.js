@@ -1,10 +1,12 @@
 import { getDatabase, ref, set, onValue, push, update, remove } from "firebase/database";
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
+import React, {useEffect, useState, useRef} from "react";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { StyleSheet, Text, View, Image, TextInput, Button, TouchableOpacity} from "react-native";
 import { authentication } from "../config/firebase";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import * as Notifications from 'expo-notifications';
+import storage from "@react-native-async-storage/async-storage";
 
 // For later: Google Sign in Authentication Information 
 // https://blog.jscrambler.com/how-to-integrate-firebase-authentication-with-an-expo-app#:~:text=From%20the%20left%20side%20menu,it%2C%20and%20then%20click%20Save.
@@ -17,6 +19,12 @@ export default function Login({navigation}) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
+
+    // adding notification section here too
+    const [notification, setNotification] = useState(false);
+    const notificationListener = useRef();
+    const responseListener = useRef();
+
     // firebase things 
     const auth = getAuth();
     const db = getDatabase();
@@ -27,6 +35,63 @@ export default function Login({navigation}) {
     const AppleImage = require('../assets/apple.png');
     const RecImage = require('../assets/rec-decor-background.png');
     const TriImage = require('../assets/tria-decor-background.png');
+
+
+
+
+    useEffect(() => {
+        const getPermission = async () => {
+    
+            const { status: existingStatus } = await Notifications.getPermissionsAsync();
+            let finalStatus = existingStatus;
+            if (existingStatus !== 'granted') {
+            const { status } = await Notifications.requestPermissionsAsync();
+            finalStatus = status;
+            }
+            if (finalStatus !== 'granted') {
+            alert('Enable push notifications to use the app!');
+            await storage.setItem('expopushtoken', "");
+            return;
+            }
+            const token = (await Notifications.getExpoPushTokenAsync()).data;
+            await storage.setItem('expopushtoken', token);
+    
+            if (Platform.OS === 'android') {
+              Notifications.setNotificationChannelAsync('default', {
+                name: 'default',
+                importance: Notifications.AndroidImportance.MAX,
+                vibrationPattern: [0, 250, 250, 250],
+                lightColor: '#FF231F7C',
+              });
+            }
+        }
+    
+        getPermission();
+    
+        notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+          setNotification(notification);
+        });
+    
+        responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {});
+    
+        return () => {
+          Notifications.removeNotificationSubscription(notificationListener.current);
+          Notifications.removeNotificationSubscription(responseListener.current);
+        };
+      }, []);
+    
+      const notify = async () => {
+        await Notifications.scheduleNotificationAsync({
+          content: {
+            title: "SquadSync",
+            body: "Welcome to SquadSync",
+            data: { data: "Welcome to SquadSync" }
+          },
+          trigger: {
+            seconds: 3
+          }
+        });
+      }
 
     //  this is a function that navigates to the Sign Up page when the user click a button 
     const onPressSignUp = () => {
@@ -42,7 +107,7 @@ export default function Login({navigation}) {
           console.log('Logged in with:', user.email);
           alert('Login successful!');
           navigation.navigate('TabNavigation', {screen: 'Home'}); 
-        
+          notify();
         })
         // If the user's credientials aren't valid, result in error 
         .catch((error) => {
