@@ -10,6 +10,7 @@ import { GroupNavigation } from './Screens/StackScreen/GroupScreens/GroupNavigat
 import PrivacySecurity from './Screens/StackScreen/PrivacySecurity';
 import HelpCenter from './Screens/StackScreen/HelpCenter';
 import AboutUs from './Screens/StackScreen/AboutUs';
+import Health from './Screens/StackScreen/Health';
 
 import React, {useState, useEffect} from 'react';
 import theme from './theme/theme';
@@ -41,6 +42,7 @@ export default function App() {
          <Stack.Screen name='PrivacySecurity' component={PrivacySecurity} />
         <Stack.Screen name='HelpCenter' component={HelpCenter} />
          <Stack.Screen name='AboutUs' component={AboutUs} />
+         <Stack.Screen name='Health' component={Health} />
       </Stack.Navigator>
     </NavigationContainer>
     </themeContext.Provider>
