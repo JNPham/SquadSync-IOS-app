@@ -10,8 +10,6 @@ import themeContext from '../../theme/themeContext';
 import DialogInput from 'react-native-dialog-input';
 import { createStackNavigator } from '@react-navigation/stack';
 import Health from './Health';
-// import { once } from "firebase/database/dist/esm/src/api/on";
-
 
 const Stack = createStackNavigator();
 
@@ -28,14 +26,12 @@ const Nickname = ({ navigation }) => {
     const db = getDatabase();
     const userId = getAuth().currentUser.uid;
     
-
-
     const handleJoinGroup = (inputText) => {
         const dbRef = ref(db, "/groups");
         let foundGroup = false;
-        get(child(dbRef, `groups`)).then((snapshot) => {
-            const groups = snapshot.val();
-            const groupList = Object.entries(groups);            
+        get(dbRef).then((snapshot) => {
+          const groups = snapshot.val();
+          const groupList = Object.entries(groups);            
           for (const [key, value] of groupList) {
             if (value.name === inputText) {
               foundGroup = true;
@@ -49,34 +45,47 @@ const Nickname = ({ navigation }) => {
           if (!foundGroup) {
             alert(`Group ${inputText} not found`);
           }
+        }).catch((error) => {
+          console.error(error);
         });
         setVisible2(false);
       };
       
-
-      const handleLeaveGroup = (inputText) => {
+      
+    
+    const handleLeaveGroup = (inputText) => {
         const dbRef = ref(db, "groups");
         let foundGroup = false;
-        onValue(dbRef, (snapshot) => {
-          const groups = snapshot.val();
-          for (const [key, value] of Object.entries(groups)) {
-            if (value.name === inputText) {
-              foundGroup = true;
-              alert(`Left group ${inputText}`);
-              setrg(inputText); // set the left group name
-              const userId = getAuth().currentUser.uid;
-              update(ref(db, `groups/${key}/members`), { [userId]: null });
-              break;
+        get(child(dbRef, "groups")).then((snapshot) => {
+            const groups = snapshot.val();
+            if (groups) {
+                for (const [key, value] of Object.entries(groups)) {
+                    if (value.name === inputText) {
+                        foundGroup = true;
+                        alert(`Left group ${inputText}`);
+                        setrg(inputText); // set the left group name
+                        const userId = getAuth().currentUser.uid;
+                        const memberRef = ref(db, `groups/${key}/members`);
+                        get(child(memberRef, userId)).then((snapshot) => {
+                            if (snapshot.exists()) {
+                                remove(child(memberRef, userId));
+                            } else {
+                                alert(`You are not a member of group ${inputText}`);
+                            }
+                        });
+                        break;
+                    }
+                }
             }
-          }
-          if (!foundGroup) {
-            alert(`Group ${inputText} not found`);
-          }
+            if (!foundGroup) {
+                alert(`Group ${inputText} not found`);
+            }
+        }).catch((error) => {
+            console.error(error);
         });
         setVisible3(false);
-      };
+    };
     
-      
     
     return (
         <View style={styles.container}>
