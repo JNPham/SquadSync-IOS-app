@@ -1,14 +1,15 @@
-import { StyleSheet, View, Text, Image, FlatList, SafeAreaView } from 'react-native';
+import { StyleSheet, View, Text, Image, FlatList, SafeAreaView} from 'react-native';
 import React from 'react';
 import { Video } from 'expo-av';
 import { TouchableOpacity } from 'react-native';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { getDatabase, child, ref, push, set, get, onValue } from "firebase/database";
 import * as ImagePicker from 'expo-image-picker';
 import { getStorage, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { ref as sRef } from 'firebase/storage';
 import {Dimensions} from 'react-native';
 import { getAuth } from '@firebase/auth';
+import themeContext from '../../../theme/themeContext';
 
 export default function GroupMedia({route, navigation }) {
     const defaultGroupPic = 'https://miro.medium.com/max/720/1*W35QUSvGpcLuxPo3SRTH4w.png';
@@ -23,6 +24,9 @@ export default function GroupMedia({route, navigation }) {
     const [imageUrls, setGroupChatImages] = useState();
     const [videoUrls, setGroupChatVideos] = useState();
     const [selectedVideo, setSelectedVideo] = React.useState(null);
+
+    // darkmode 
+    const theme = useContext(themeContext);
 
     //Nhi code start
     //function searchs from firebase using uid and returns the currently logged in user's username
@@ -257,10 +261,10 @@ export default function GroupMedia({route, navigation }) {
 
     return(
         <SafeAreaView
-            style={styles.container}
+            style={[styles.container, {backgroundColor: theme.background}]}
             behavior="padding">
-            <Text style={styles.title}>Pictures</Text>
-            <View style={styles.pic}>
+            <Text style={[styles.title, {color:theme.color}]}>Pictures</Text>
+            <View style={[styles.pic, {backgroundColor: theme.background}]}>
                 <FlatList
                     numColumns={3}
                     data={imageUrls}
@@ -269,8 +273,8 @@ export default function GroupMedia({route, navigation }) {
                 />
             </View>
 
-            <Text style={styles.title}>Videos</Text>
-            <View style={styles.video}>
+            <Text style={[styles.title, {color:theme.color}]}>Videos</Text>
+            <View style={[styles.video, {backgroundColor: theme.background}]}>
                 <FlatList
                     data={videoUrls}
                     numColumns={3}
@@ -281,12 +285,12 @@ export default function GroupMedia({route, navigation }) {
             <View style={styles.button}>
                 <TouchableOpacity onPress={pickImage} >
                     <View style={styles.buttonContainer}>
-                        <Text style={styles.text}>Send picture</Text>
+                        <Text style={[styles.text, {color:theme.color}]}>Send picture</Text>
                     </View> 
                 </TouchableOpacity>
                 <TouchableOpacity onPress={pickVideo} >
                     <View style={styles.buttonContainer}>
-                        <Text style={styles.text}>Send video</Text>
+                        <Text style={[styles.text, {color:theme.color}]}>Send video</Text>
                     </View> 
                 </TouchableOpacity>
             </View>

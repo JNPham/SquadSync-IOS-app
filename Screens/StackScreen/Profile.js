@@ -11,6 +11,7 @@ import DialogInput from 'react-native-dialog-input';
 import { createStackNavigator } from '@react-navigation/stack';
 import Health from './Health';
 
+
 const Stack = createStackNavigator();
 
 const Nickname = ({ navigation }) => {
@@ -110,7 +111,7 @@ const Nickname = ({ navigation }) => {
       
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, {backgroundColor: theme.background}]}>
             <Image
                 source={{ uri: defaultProfilePic }}
                 style={{ width: 200, height: 200, borderRadius: 200 / 2, borderWidth: 4, marginTop: 60 }}
