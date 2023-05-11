@@ -41,13 +41,13 @@ function getDataAndFormat(items) {
             }); 
                 
     });
-    console.log(items);
-    console.log("");
-    console.log("sorting now");
-    console.log("");
-    console.log("new items");
+    // console.log(items);
+    // console.log("");
+    // console.log("sorting now");
+    // console.log("");
+    // console.log("new items");
     sortedItems = sortObj(items);
-    console.log(sortedItems);
+    // console.log(sortedItems);
 
     });
 
@@ -84,7 +84,7 @@ export default function GroupSettingPage({ navigation })  {
                 setStreakScore(score); 
             }
         });
-        console.log(streakScore);
+        // console.log(streakScore);
     };
 
     getScore(userId);
@@ -97,7 +97,7 @@ export default function GroupSettingPage({ navigation })  {
                 <View style={{flex:1, marginLeft: 10, marginTop: 5}}>
                     {/* <View style={{flexDirection:"row", alignItems: "center"}}></View> */}
                     <Text style={styles.flatlistText}>{post.name}</Text>
-                    <Text style={styles.flatlistText}>Steps: {post.score}</Text>
+                    <Text style={styles.flatlistText}>Score: {post.score}</Text>
                 </View>
             </View>
         );
