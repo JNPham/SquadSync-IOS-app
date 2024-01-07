@@ -1,6 +1,6 @@
 # SquadSync - Senior Design Project
 ## Purpose 
-SquadSync is a mobile application that allows users to create and join groups with friends. These groups or ‘Squads’ can then display a wide variety of daily fun and interesting information about the joined members which can then be nicely displayed as a view inside the app..
+SquadSync is a mobile application that allows users to create and join groups with friends. These groups or ‘Squads’ can then display a wide variety of daily fun and interesting information about the joined members which can then be nicely displayed as a view inside the app.
 ## Requirements
 ### Sign in/Sign up 
 - Allow users to create an account that will give them a username and a way to identify themselves.
